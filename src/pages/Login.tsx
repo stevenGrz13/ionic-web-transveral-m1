@@ -16,6 +16,7 @@ import {
 } from '@ionic/react';
 import axios from 'axios';
 import { useHistory } from 'react-router-dom';
+import { API_BASE_URL } from '../../config';
 
 interface Role {
   id: number;
@@ -37,7 +38,7 @@ const Login: React.FC = () => {
     const fetchRoles = async () => {
       try {
         const res = await axios.get<Role[]>(
-          'http://localhost:5055/api/RoleApi'
+          `${API_BASE_URL}/RoleApi`
         );
 
         // Filtrer les rôles pour exclure l'administrateur (supposons que l'admin a l'ID 3)
@@ -63,7 +64,7 @@ const Login: React.FC = () => {
 
     try {
       const response = await axios.post(
-        'http://localhost:5055/api/UtilisateursApi/Login',
+        `${API_BASE_URL}/UtilisateursApi/Login`,
         {
           idRole: idRole,
           email: email,

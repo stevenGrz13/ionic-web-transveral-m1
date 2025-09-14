@@ -15,6 +15,7 @@ import {
   IonToast
 } from '@ionic/react';
 import axios from 'axios';
+import { API_BASE_URL } from '../../../config';
 
 interface Vehicule {
   id: number;
@@ -44,7 +45,7 @@ const Trajet: React.FC = () => {
   useEffect(() => {
     const fetchVehicules = async () => {
       try {
-        const res = await axios.get<Vehicule[]>('http://localhost:5055/api/VehiculeApi');
+        const res = await axios.get<Vehicule[]>(`${API_BASE_URL}/VehiculeApi`);
         setVehicules(res.data);
         if (res.data.length > 0) {
           setSelectedVehiculeId(res.data[0].id);
@@ -73,7 +74,7 @@ const Trajet: React.FC = () => {
     };
 
     try {
-      await axios.post('http://localhost:5055/api/TrajetApi', newTrajet);
+      await axios.post(`${API_BASE_URL}/TrajetApi`, newTrajet);
       setToastMessage('Trajet créé avec succès !');
       setDepart('');
       setArrivee('');

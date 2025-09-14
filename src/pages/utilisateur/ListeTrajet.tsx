@@ -26,7 +26,7 @@ import {
 import { calendar, cash, time, people, car } from 'ionicons/icons';
 import axios from 'axios';
 import { useHistory } from 'react-router-dom';
-
+import { API_BASE_URL } from '../../../config';
 interface Trajet {
   id: number;
   idVehicule: number;
@@ -68,12 +68,12 @@ const ListeTrajet: React.FC = () => {
       setLoading(true);
       
       // Récupérer tous les trajets
-      const trajetsRes = await axios.get<Trajet[]>('http://localhost:5055/api/TrajetApi');
+      const trajetsRes = await axios.get<Trajet[]>(`${API_BASE_URL}/TrajetApi`);
 
       const allTrajets = trajetsRes.data;
 
       // Récupérer toutes les réservations
-      const reservationsRes = await axios.get<Reservation[]>('http://localhost:5055/api/VoyageApi');
+      const reservationsRes = await axios.get<Reservation[]>(`${API_BASE_URL}/VoyageApi`);
       const allReservations = reservationsRes.data;
 
       // Pour chaque trajet, récupérer le véhicule et calculer les places disponibles
@@ -81,7 +81,7 @@ const ListeTrajet: React.FC = () => {
         allTrajets.map(async (trajet) => {
           try {
             // Récupérer les détails du véhicule
-            const vehiculeRes = await axios.get(`http://localhost:5055/api/VehiculeApi/${trajet.idVehicule}`);
+            const vehiculeRes = await axios.get(`${API_BASE_URL}/VehiculeApi/${trajet.idVehicule}`);
             const vehicule = vehiculeRes.data;
 
             // Compter les réservations pour ce trajet

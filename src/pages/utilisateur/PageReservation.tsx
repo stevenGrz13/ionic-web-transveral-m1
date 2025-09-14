@@ -24,6 +24,7 @@ import {
 import { calendar, time, cash, car, people } from 'ionicons/icons';
 import axios from 'axios';
 import { useHistory, useParams } from 'react-router-dom';
+import { API_BASE_URL } from '../../../config';
 
 interface Trajet {
   id: number;
@@ -65,15 +66,15 @@ const PageReservation: React.FC = () => {
   const fetchTrajet = async () => {
     try {
       setLoading(true);
-      const res = await axios.get<Trajet>(`http://localhost:5055/api/TrajetApi/${trajetId}`);
+      const res = await axios.get<Trajet>(`${API_BASE_URL}/TrajetApi/${trajetId}`);
       const trajetData = res.data;
 
       // Récupérer les détails du véhicule
-      const vehiculeRes = await axios.get(`http://localhost:5055/api/VehiculeApi/${trajetData.idVehicule}`);
+      const vehiculeRes = await axios.get(`${API_BASE_URL}/VehiculeApi/${trajetData.idVehicule}`);
       const vehicule = vehiculeRes.data;
 
       // Récupérer les réservations pour calculer les places disponibles
-      const reservationsRes = await axios.get(`http://localhost:5055/api/VoyageApi`);
+      const reservationsRes = await axios.get(`${API_BASE_URL}/VoyageApi`);
       const allVoyages = reservationsRes.data;
       const voyagesTrajet = allVoyages.filter((voyage: any) => voyage.idTrajet === trajetData.id);
       
@@ -166,11 +167,11 @@ const PageReservation: React.FC = () => {
 
       if(nombrePlaces > 1){
         for(let i = 0; i<nombrePlaces; i++){
-            await axios.post('http://localhost:5055/api/VoyageApi', newVoyage);
+            await axios.post(`${API_BASE_URL}/VoyageApi`, newVoyage);
         }
       }
       if(nombrePlaces == 1){
-        await axios.post('http://localhost:5055/api/VoyageApi', newVoyage);
+        await axios.post(`${API_BASE_URL}/VoyageApi`, newVoyage);
       }
       
       setToastMessage('Réservation confirmée !');

@@ -23,6 +23,7 @@ import {
 import { car, calendar, location, cash } from 'ionicons/icons';
 import axios from 'axios';
 import { useHistory, useParams } from 'react-router-dom';
+import { API_BASE_URL } from '../../../config';
 
 interface Vehicule {
   id: number;
@@ -54,7 +55,7 @@ const TrajetsVehicule: React.FC = () => {
   // Charger les détails du véhicule
   const fetchVehicule = async () => {
     try {
-      const res = await axios.get<Vehicule>(`http://localhost:5055/api/VehiculeApi/${vehiculeId}`);
+      const res = await axios.get<Vehicule>(`${API_BASE_URL}/VehiculeApi/${vehiculeId}`);
       setVehicule(res.data);
     } catch (err) {
       console.error(err);
@@ -65,7 +66,7 @@ const TrajetsVehicule: React.FC = () => {
   // Charger les trajets de ce véhicule
   const fetchTrajetsVehicule = async () => {
     try {
-      const res = await axios.get<Trajet[]>('http://localhost:5055/api/TrajetApi');
+      const res = await axios.get<Trajet[]>(`${API_BASE_URL}/TrajetApi`);
       const trajetsVehicule = res.data.filter(trajet => trajet.idVehicule === parseInt(vehiculeId));
       setTrajets(trajetsVehicule);
     } catch (err) {
@@ -77,7 +78,7 @@ const TrajetsVehicule: React.FC = () => {
   // Charger tous les trajets (pour le bouton "Tous les trajets")
   const fetchAllTrajets = async () => {
     try {
-      const res = await axios.get<Trajet[]>('http://localhost:5055/api/TrajetApi');
+      const res = await axios.get<Trajet[]>(`${API_BASE_URL}/TrajetApi`);
       setAllTrajets(res.data);
       setShowAllTrajets(true);
     } catch (err) {

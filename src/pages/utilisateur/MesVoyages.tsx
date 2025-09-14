@@ -22,6 +22,7 @@ import {
 import { location, calendar, time, cash, car, checkmarkCircle, closeCircle } from 'ionicons/icons';
 import axios from 'axios';
 import { useHistory } from 'react-router-dom';
+import { API_BASE_URL } from '../../../config';
 
 interface Voyage {
   id: number;
@@ -62,7 +63,7 @@ const MesVoyages: React.FC = () => {
       setLoading(true);
       
       // Récupérer tous les voyages
-      const voyagesRes = await axios.get<Voyage[]>('http://localhost:5055/api/VoyageApi');
+      const voyagesRes = await axios.get<Voyage[]>(`${API_BASE_URL}/VoyageApi`);
       
       // Filtrer pour n'avoir que les voyages de l'utilisateur actuel
       const voyagesUtilisateur = voyagesRes.data.filter(voyage => voyage.idPassager === idUtilisateur);
@@ -72,11 +73,11 @@ const MesVoyages: React.FC = () => {
         voyagesUtilisateur.map(async (voyage) => {
           try {
             // Récupérer les détails du trajet
-            const trajetRes = await axios.get(`http://localhost:5055/api/TrajetApi/${voyage.idTrajet}`);
+            const trajetRes = await axios.get(`${API_BASE_URL}/TrajetApi/${voyage.idTrajet}`);
             const trajet = trajetRes.data;
             
             // Récupérer les détails du véhicule
-            const vehiculeRes = await axios.get(`http://localhost:5055/api/VehiculeApi/${trajet.idVehicule}`);
+            const vehiculeRes = await axios.get(`${API_BASE_URL}/VehiculeApi/${trajet.idVehicule}`);
             const vehicule = vehiculeRes.data;
             
             return {
@@ -121,7 +122,7 @@ const MesVoyages: React.FC = () => {
       };
 
       // Envoyer la requête PUT avec l'objet voyage complet
-      await axios.put(`http://localhost:5055/api/VoyageApi/${voyage.id}`, voyageToUpdate);
+      await axios.put(`${API_BASE_URL}/VoyageApi/${voyage.id}`, voyageToUpdate);
       
       setToastMessage('Paiement effectué avec succès !');
       

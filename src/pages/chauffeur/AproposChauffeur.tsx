@@ -16,6 +16,8 @@ import {
 } from '@ionic/react';
 import axios from 'axios';
 
+import { API_BASE_URL } from '../../../config';
+
 interface Utilisateur {
   id: number;
   nom: string;
@@ -35,7 +37,7 @@ const AProposChauffeur: React.FC = () => {
     try {
       // Ici tu peux mettre l'ID du chauffeur connecté
       const userId = sessionStorage.getItem('userId');
-      const res = await axios.get<Utilisateur>(`http://localhost:5055/api/UtilisateursApi/${userId}`);
+      const res = await axios.get<Utilisateur>(`${API_BASE_URL}/UtilisateursApi/${userId}`);
 
       setUtilisateur(res.data);
     } catch (err) {

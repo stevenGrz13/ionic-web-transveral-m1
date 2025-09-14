@@ -21,6 +21,7 @@ import {
 import { add } from 'ionicons/icons';
 import axios from 'axios';
 import { useHistory } from 'react-router';
+import { API_BASE_URL } from '../../../config';
 
 interface Vehicule {
   id: number;
@@ -49,7 +50,7 @@ const PageVehicules: React.FC = () => {
 
   const fetchVehicules = async () => {
     try {
-      const res = await axios.get<Vehicule[]>('http://localhost:5055/api/VehiculeApi');
+      const res = await axios.get<Vehicule[]>(`${API_BASE_URL}/VehiculeApi`);
       setVehicules(res.data);
     } catch (err) {
       console.error(err);
@@ -81,7 +82,7 @@ const PageVehicules: React.FC = () => {
     if (!selectedVehicule) return;
 
     try {
-      await axios.put(`http://localhost:5055/api/VehiculeApi/${selectedVehicule.id}`, selectedVehicule);
+      await axios.put(`${API_BASE_URL}/VehiculeApi/${selectedVehicule.id}`, selectedVehicule);
       setToastMessage('Véhicule mis à jour !');
       setModalOpen(false);
       fetchVehicules();
@@ -93,7 +94,7 @@ const PageVehicules: React.FC = () => {
 
   const handleCreate = async () => {
     try {
-      await axios.post('http://localhost:5055/api/VehiculeApi', newVehicule);
+      await axios.post(`${API_BASE_URL}/VehiculeApi`, newVehicule);
       setToastMessage('Véhicule ajouté !');
       setAddModalOpen(false);
       fetchVehicules();
@@ -107,7 +108,7 @@ const PageVehicules: React.FC = () => {
     if (!selectedVehicule) return;
 
     try {
-      await axios.delete(`http://localhost:5055/api/VehiculeApi/${selectedVehicule.id}`);
+      await axios.delete(`${API_BASE_URL}/VehiculeApi/${selectedVehicule.id}`);
       setToastMessage('Véhicule supprimé !');
       setModalOpen(false);
       fetchVehicules();
