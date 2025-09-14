@@ -1,0 +1,7 @@
+{
+  "name": "covoiturage",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react-vite"
+}
