@@ -64,9 +64,9 @@ const ChauffeurPage: React.FC = () => {
           <IonItem routerLink="/chauffeur/mes-vehicules">
             <IonLabel>Mes véhicules</IonLabel>
           </IonItem>
-          <IonItem routerLink="/chauffeur/historique">
+          {/* <IonItem routerLink="/chauffeur/historique">
             <IonLabel>Historique de mes trajets</IonLabel>
-          </IonItem>
+          </IonItem> */}
           <IonItem routerLink="/chauffeur/creer-trajet">
             <IonLabel>Créer trajet</IonLabel>
           </IonItem>

@@ -23,7 +23,7 @@ import {
   IonChip,
   IonLoading
 } from '@ionic/react';
-import { calendar, cash, time, people, car } from 'ionicons/icons';
+import { calendar, time, people, car } from 'ionicons/icons';
 import axios from 'axios';
 import { useHistory } from 'react-router-dom';
 import { API_BASE_URL } from '../../../config';
@@ -308,13 +308,13 @@ const ListeTrajet: React.FC = () => {
                       {!trajet.placesDisponibles || trajet.placesDisponibles <= 0 ? 'Complet' : 'Réserver'}
                     </IonButton>
 
-                    <IonButton
+                    {/* <IonButton
                       color="primary"
                       fill="outline"
                       onClick={() => handleVoirDetails(trajet.id)}
                     >
                       Détails
-                    </IonButton>
+                    </IonButton> */}
                   </div>
                 </IonCardContent>
               </IonCard>

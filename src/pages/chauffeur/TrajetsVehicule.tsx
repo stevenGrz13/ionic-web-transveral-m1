@@ -184,7 +184,7 @@ const TrajetsVehicule: React.FC = () => {
                     </IonBadge>
                     {trajet.prixUniquePlace && (
                       <IonBadge color="success">
-                        <IonIcon icon={cash} /> {trajet.prixUniquePlace} Ar
+                        {trajet.prixUniquePlace} Ar
                       </IonBadge>
                     )}
                   </div>
@@ -210,14 +210,14 @@ const TrajetsVehicule: React.FC = () => {
                     </div>
                   )}
 
-                  <div style={{ display: 'flex', gap: '10px' }}>
+                  {/* <div style={{ display: 'flex', gap: '10px' }}>
                     <IonButton size="small" onClick={() => handleEditTrajet(trajet.id)}>
                       Modifier
                     </IonButton>
                     <IonButton size="small" color="medium">
                       Détails
                     </IonButton>
-                  </div>
+                  </div> */}
                 </IonCardContent>
               </IonCard>
             ))
