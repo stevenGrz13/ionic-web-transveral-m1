@@ -184,7 +184,7 @@ const TrajetsVehicule: React.FC = () => {
                     </IonBadge>
                     {trajet.prixUniquePlace && (
                       <IonBadge color="success">
-                        <IonIcon icon={cash} /> {trajet.prixUniquePlace}€
+                        <IonIcon icon={cash} /> {trajet.prixUniquePlace} Ar
                       </IonBadge>
                     )}
                   </div>

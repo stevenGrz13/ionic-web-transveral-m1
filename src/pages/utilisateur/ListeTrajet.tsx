@@ -27,6 +27,7 @@ import { calendar, cash, time, people, car } from 'ionicons/icons';
 import axios from 'axios';
 import { useHistory } from 'react-router-dom';
 import { API_BASE_URL } from '../../../config';
+
 interface Trajet {
   id: number;
   idVehicule: number;
@@ -61,52 +62,40 @@ const ListeTrajet: React.FC = () => {
   const [filterArrivee, setFilterArrivee] = useState('');
   const [toastMessage, setToastMessage] = useState('');
   const [loading, setLoading] = useState(true);
+  const [showToast, setShowToast] = useState(false);
 
-  // Charger tous les trajets avec les véhicules et places disponibles
+  // Charger tous les trajets avec détails véhicule et places disponibles
   const fetchTrajets = async () => {
     try {
       setLoading(true);
-      
-      // Récupérer tous les trajets
+
       const trajetsRes = await axios.get<Trajet[]>(`${API_BASE_URL}/TrajetApi`);
+      const reservationsRes = await axios.get<Reservation[]>(`${API_BASE_URL}/VoyageApi`);
 
       const allTrajets = trajetsRes.data;
-
-      // Récupérer toutes les réservations
-      const reservationsRes = await axios.get<Reservation[]>(`${API_BASE_URL}/VoyageApi`);
       const allReservations = reservationsRes.data;
 
-      // Pour chaque trajet, récupérer le véhicule et calculer les places disponibles
       const trajetsAvecDetails = await Promise.all(
         allTrajets.map(async (trajet) => {
           try {
-            // Récupérer les détails du véhicule
             const vehiculeRes = await axios.get(`${API_BASE_URL}/VehiculeApi/${trajet.idVehicule}`);
             const vehicule = vehiculeRes.data;
 
-            // Compter les réservations pour ce trajet
             const reservationsTrajet = allReservations.filter(res => res.idTrajet === trajet.id);
             const placesDisponibles = (vehicule.nombrePlace || 4) - reservationsTrajet.length;
 
-            return {
-              ...trajet,
-              vehicule,
-              placesDisponibles: Math.max(0, placesDisponibles) // Éviter les valeurs négatives
-            };
+            return { ...trajet, vehicule, placesDisponibles: Math.max(0, placesDisponibles) };
           } catch (error) {
             console.error('Erreur lors du chargement des détails du trajet:', error);
-            return {
-              ...trajet,
-              placesDisponibles: 0 // Par défaut si erreur
-            };
+            return { ...trajet, placesDisponibles: 0 };
           }
         })
       );
 
       setTrajets(trajetsAvecDetails);
       setFilteredTrajets(trajetsAvecDetails);
-    } catch (err) {
-      console.error(err);
+    } catch (error) {
+      console.error(error);
       setToastMessage('Impossible de charger les trajets');
     } finally {
       setLoading(false);
@@ -117,37 +106,34 @@ const ListeTrajet: React.FC = () => {
     fetchTrajets();
   }, []);
 
-  // Filtrer les trajets
+  // Filtrage des trajets
   useEffect(() => {
     let filtered = trajets;
-    
+
     if (searchText) {
+      const search = searchText.toLowerCase();
       filtered = filtered.filter(trajet =>
-        trajet.depart.toLowerCase().includes(searchText.toLowerCase()) ||
-        trajet.arrivee.toLowerCase().includes(searchText.toLowerCase()) ||
-        (trajet.vehicule?.marque && trajet.vehicule.marque.toLowerCase().includes(searchText.toLowerCase())) ||
-        (trajet.vehicule?.modele && trajet.vehicule.modele.toLowerCase().includes(searchText.toLowerCase()))
+        trajet.depart.toLowerCase().includes(search) ||
+        trajet.arrivee.toLowerCase().includes(search) ||
+        trajet.vehicule?.marque.toLowerCase().includes(search) ||
+        trajet.vehicule?.modele.toLowerCase().includes(search)
       );
     }
-    
+
     if (filterDepart) {
-      filtered = filtered.filter(trajet =>
-        trajet.depart.toLowerCase().includes(filterDepart.toLowerCase())
-      );
+      filtered = filtered.filter(trajet => trajet.depart.toLowerCase().includes(filterDepart.toLowerCase()));
     }
-    
+
     if (filterArrivee) {
-      filtered = filtered.filter(trajet =>
-        trajet.arrivee.toLowerCase().includes(filterArrivee.toLowerCase())
-      );
+      filtered = filtered.filter(trajet => trajet.arrivee.toLowerCase().includes(filterArrivee.toLowerCase()));
     }
-    
+
     setFilteredTrajets(filtered);
   }, [searchText, filterDepart, filterArrivee, trajets]);
 
+  // Formater la date et l'heure
   const formatDate = (dateString?: string) => {
     if (!dateString) return 'Date non spécifiée';
-    
     try {
       const date = new Date(dateString);
       return new Intl.DateTimeFormat('fr-FR', {
@@ -158,23 +144,28 @@ const ListeTrajet: React.FC = () => {
         hour: '2-digit',
         minute: '2-digit'
       }).format(date);
-    } catch (error) {
+    } catch {
       return 'Date invalide';
     }
   };
 
   const formatHeure = (dateString?: string) => {
     if (!dateString) return '';
-    
     try {
       const date = new Date(dateString);
-      return new Intl.DateTimeFormat('fr-FR', {
-        hour: '2-digit',
-        minute: '2-digit'
-      }).format(date);
-    } catch (error) {
+      return new Intl.DateTimeFormat('fr-FR', { hour: '2-digit', minute: '2-digit' }).format(date);
+    } catch {
       return '';
     }
+  };
+
+  // Actions utilisateur
+  const handleAcheterPlaceWithCheck = (id: number) => {
+    if (sessionStorage.getItem('abonnement') !== 'true') {
+      setShowToast(true);
+      return;
+    }
+    handleAcheterPlace(id);
   };
 
   const handleAcheterPlace = (trajetId: number) => {
@@ -214,18 +205,18 @@ const ListeTrajet: React.FC = () => {
       </IonHeader>
 
       <IonContent className="ion-padding">
-        {/* Barre de recherche et filtres */}
+        {/* Recherche et filtres */}
         <IonSearchbar
           value={searchText}
-          onIonInput={(e) => setSearchText(e.detail.value!)}
-          placeholder="Rechercher un trajet, ville, véhicule..."
+          onIonInput={e => setSearchText(e.detail.value!)}
+          placeholder="Rechercher un trajet, ville ou véhicule"
         />
 
         <div style={{ display: 'flex', gap: '10px', marginBottom: '20px', flexWrap: 'wrap' }}>
           <IonSelect
             value={filterDepart}
             placeholder="Départ"
-            onIonChange={(e) => setFilterDepart(e.detail.value)}
+            onIonChange={e => setFilterDepart(e.detail.value)}
             style={{ minWidth: '120px' }}
           >
             <IonSelectOption value="">Tous les départs</IonSelectOption>
@@ -237,7 +228,7 @@ const ListeTrajet: React.FC = () => {
           <IonSelect
             value={filterArrivee}
             placeholder="Arrivée"
-            onIonChange={(e) => setFilterArrivee(e.detail.value)}
+            onIonChange={e => setFilterArrivee(e.detail.value)}
             style={{ minWidth: '120px' }}
           >
             <IonSelectOption value="">Toutes les arrivées</IonSelectOption>
@@ -276,21 +267,14 @@ const ListeTrajet: React.FC = () => {
                     {trajet.depart} → {trajet.arrivee}
                   </IonCardTitle>
                 </IonCardHeader>
-                
+
                 <IonCardContent>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px', flexWrap: 'wrap', gap: '10px' }}>
-                    <IonBadge color="primary">
-                      #{trajet.id}
-                    </IonBadge>
-                    
-                    {trajet.prixUniquePlace && (
-                      <IonBadge color="success">
-                        <IonIcon icon={cash} /> {trajet.prixUniquePlace}€
-                      </IonBadge>
-                    )}
-                    
+                    <IonBadge color="primary">#{trajet.id}</IonBadge>
+                    {trajet.prixUniquePlace && <IonBadge color="success">{trajet.prixUniquePlace} Ar</IonBadge>}
+
                     <IonChip color={trajet.placesDisponibles && trajet.placesDisponibles > 0 ? 'success' : 'danger'}>
-                      <IonIcon icon={people} /> 
+                      <IonIcon icon={people} style={{ marginRight: '6px' }} />
                       {trajet.placesDisponibles !== undefined ? `${trajet.placesDisponibles} place(s)` : 'N/A'}
                     </IonChip>
                   </div>
@@ -300,12 +284,12 @@ const ListeTrajet: React.FC = () => {
                       <IonIcon icon={calendar} style={{ marginRight: '8px', color: '#3880ff' }} />
                       <strong>Date:</strong> {formatDate(trajet.dateDepart)}
                     </div>
-                    
+
                     <div style={{ display: 'flex', alignItems: 'center', marginBottom: '8px' }}>
                       <IonIcon icon={time} style={{ marginRight: '8px', color: '#3880ff' }} />
                       <strong>Heure:</strong> {formatHeure(trajet.dateDepart)}
                     </div>
-                    
+
                     {trajet.vehicule && (
                       <div style={{ display: 'flex', alignItems: 'center', marginBottom: '8px' }}>
                         <IonIcon icon={car} style={{ marginRight: '8px', color: '#3880ff' }} />
@@ -318,12 +302,12 @@ const ListeTrajet: React.FC = () => {
                     <IonButton
                       color="success"
                       expand="block"
-                      onClick={() => handleAcheterPlace(trajet.id)}
+                      onClick={() => handleAcheterPlaceWithCheck(trajet.id)}
                       disabled={!trajet.placesDisponibles || trajet.placesDisponibles <= 0}
                     >
                       {!trajet.placesDisponibles || trajet.placesDisponibles <= 0 ? 'Complet' : 'Réserver'}
                     </IonButton>
-                    
+
                     <IonButton
                       color="primary"
                       fill="outline"
@@ -343,6 +327,14 @@ const ListeTrajet: React.FC = () => {
           message={toastMessage}
           duration={2000}
           onDidDismiss={() => setToastMessage('')}
+        />
+
+        <IonToast
+          isOpen={showToast}
+          onDidDismiss={() => setShowToast(false)}
+          message="Vous devez avoir un abonnement actif pour réserver."
+          duration={2500}
+          color="danger"
         />
       </IonContent>
     </IonPage>

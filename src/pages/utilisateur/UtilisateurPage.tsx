@@ -47,6 +47,9 @@ const UtilisateurPage: React.FC = () => {
           <IonItem routerLink="/utilisateur/trajets">
             <IonLabel>Chercher trajets</IonLabel>
           </IonItem>
+          <IonItem routerLink="/utilisateur/abonnement">
+            <IonLabel>Abonnement</IonLabel>
+          </IonItem>
         </IonList>
 
         <IonModal isOpen={showLogoutModal} onDidDismiss={closeLogoutModal}>

@@ -46,6 +46,7 @@ import ListeTrajet from './pages/utilisateur/ListeTrajet';
 import PageReservation from './pages/utilisateur/PageReservation';
 import MesVoyages from './pages/utilisateur/MesVoyages';
 import APropos from './pages/utilisateur/APropos';
+import PassagerAbonnement from './pages/utilisateur/PassagerAbonnement';
 
 setupIonicReact();
 
@@ -68,6 +69,7 @@ const App: React.FC = () => (
         <Route path="/utilisateur/reserver-trajet/:trajetId" component={PageReservation} />
         <Route path="/utilisateur/mes-voyages" component={MesVoyages} />
         <Route path="/utilisateur/a-propos" component={APropos} />
+        <Route path="/utilisateur/abonnement" component={PassagerAbonnement} />
 
         <Redirect exact from="/" to="/login" />
       </IonRouterOutlet>

@@ -31,7 +31,7 @@ const Login: React.FC = () => {
   const [loadingRoles, setLoadingRoles] = useState(true);
   const [toastMessage, setToastMessage] = useState('');
 
-  const history = useHistory(); 
+  const history = useHistory();
 
   // Récupération des rôles au montage du composant
   useEffect(() => {
@@ -42,7 +42,7 @@ const Login: React.FC = () => {
         );
 
         // Filtrer les rôles pour exclure l'administrateur (supposons que l'admin a l'ID 3)
-      const filteredRoles = res.data.filter(role => role.id !== 3);
+        const filteredRoles = res.data.filter(role => role.id !== 3);
         setRoles(filteredRoles);
         // setRoles(res.data);
       } catch (err) {
@@ -72,15 +72,18 @@ const Login: React.FC = () => {
         }
       );
 
-      if(!response.data.success){
-        setToastMessage('Verifiez vous identifiants !');
-      }
-      else{
+      if (!response.data.success) {
+        setToastMessage('Verifiez vos identifiants !');
+      } else {
         setToastMessage('Connexion réussie !');
+
         sessionStorage.setItem('userId', response.data.utilisateur.id.toString());
-        if(response.data.utilisateur.idRole === 1){
+
+        sessionStorage.setItem('abonnement', response.data.abonnement ? 'true' : 'false');
+
+        if (response.data.utilisateur.idRole === 1) {
           history.push('/chauffeur');
-        } else if(response.data.utilisateur.idRole === 2){
+        } else if (response.data.utilisateur.idRole === 2) {
           history.push('/utilisateur');
         } else {
           history.push('/administrateur');
