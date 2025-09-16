@@ -1,35 +1,32 @@
 import React, { useState, useEffect } from 'react';
 import {
   IonPage,
-  IonHeader,
-  IonToolbar,
-  IonTitle,
   IonContent,
   IonInput,
-  IonItem,
-  IonLabel,
   IonButton,
   IonToast,
-  IonSelect,
-  IonSelectOption,
-  IonSpinner
+  IonSpinner,
+  IonText
 } from '@ionic/react';
 import axios from 'axios';
 import { useHistory } from 'react-router-dom';
 import { API_BASE_URL } from '../../config';
+import './Login.scss';
 
 interface Role {
   id: number;
-  nom: string;   // <-- adapte le nom de la propriété à ton modèle (ex: Name ou NomRole)
+  nom: string;
 }
 
 const Login: React.FC = () => {
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useState('Uzzdlh4343@gmail.com');
   const [password, setPassword] = useState('');
   const [idRole, setIdRole] = useState<number | null>(null);
   const [roles, setRoles] = useState<Role[]>([]);
   const [loadingRoles, setLoadingRoles] = useState(true);
   const [toastMessage, setToastMessage] = useState('');
+  const [rememberMe, setRememberMe] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const history = useHistory();
 
@@ -44,7 +41,6 @@ const Login: React.FC = () => {
         // Filtrer les rôles pour exclure l'administrateur (supposons que l'admin a l'ID 3)
         const filteredRoles = res.data.filter(role => role.id !== 3);
         setRoles(filteredRoles);
-        // setRoles(res.data);
       } catch (err) {
         console.error('Erreur lors du chargement des rôles :', err);
         setToastMessage("Impossible de charger les rôles");
@@ -62,6 +58,8 @@ const Login: React.FC = () => {
       return;
     }
 
+    setIsLoading(true);
+    
     try {
       const response = await axios.post(
         `${API_BASE_URL}/UtilisateursApi/Login`,
@@ -78,7 +76,6 @@ const Login: React.FC = () => {
         setToastMessage('Connexion réussie !');
 
         sessionStorage.setItem('userId', response.data.utilisateur.id.toString());
-
         sessionStorage.setItem('abonnement', response.data.abonnement ? 'true' : 'false');
 
         if (response.data.utilisateur.idRole === 1) {
@@ -91,66 +88,94 @@ const Login: React.FC = () => {
       }
 
       console.log('Utilisateur connecté :', response.data);
-      // ➜ ici tu peux rediriger vers une autre page ou stocker l'utilisateur globalement
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error(error);
-      setToastMessage('Un leger erreur au niveau de nos serveurs');
+      setToastMessage('Un léger erreur au niveau de nos serveurs');
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
     <IonPage>
-      <IonHeader>
-        <IonToolbar>
-          <IonTitle>Connexion</IonTitle>
-        </IonToolbar>
-      </IonHeader>
+      <IonContent className="auth-container" fullscreen>
+        <div className="auth-background">
+          <div className="auth-card">
+            <div className="auth-header">
+              <h1>Login</h1>
+              <p className="auth-subtitle">
+                Don't have an account? 
+                <span className='ms-1 fw-medium'>Go to the web</span>
+              </p>
+            </div>
 
-      <IonContent className="ion-padding">
-        {/* Email */}
-        <IonItem>
-          <IonLabel position="floating">Email</IonLabel>
-          <IonInput
-            type="email"
-            value={email}
-            onIonChange={e => setEmail(e.detail.value!)}
-          />
-        </IonItem>
+            <div className="input-group">
+              <label>Email Address</label>
+              <IonInput
+                type="email"
+                value={email}
+                placeholder="Enter your email"
+                onIonInput={(e) => setEmail(e.detail.value!)}
+                className="auth-input"
+              />
+            </div>
 
-        {/* Mot de passe */}
-        <IonItem>
-          <IonLabel position="floating">Mot de passe</IonLabel>
-          <IonInput
-            type="password"
-            value={password}
-            onIonChange={e => setPassword(e.detail.value!)}
-          />
-        </IonItem>
+            <div className="input-group">
+              <label>Password</label>
+              <IonInput
+                type="password"
+                value={password}
+                placeholder="Enter your password"
+                onIonInput={(e) => setPassword(e.detail.value!)}
+                className="auth-input"
+              />
+            </div>
 
-        {/* Sélection du rôle */}
-        <IonItem>
-          <IonLabel>Rôle</IonLabel>
-          {loadingRoles ? (
-            <IonSpinner name="dots" />
-          ) : (
-            <IonSelect
-              placeholder="Choisir un rôle"
-              value={idRole ?? undefined}
-              onIonChange={e => setIdRole(e.detail.value)}
+            {/* <div className="login-options">
+              <label className="checkbox-container">
+                <input 
+                  type="checkbox" 
+                  checked={rememberMe} 
+                  onChange={() => setRememberMe(!rememberMe)} 
+                />
+                <span className="checkmark"></span>
+                Remember Me
+              </label>
+              <span className="forgot-password">Forgot Password?</span>
+            </div> */}
+
+            <div className="d-flex flex-column mb-3">
+              <span className='text-dark mb-1' style={{ fontSize: '14px', fontWeight: '600' }}>Select Your Role</span>
+              {loadingRoles ? (
+                <div className="role-loading">
+                  <IonSpinner name="dots" />
+                  <IonText>Loading roles...</IonText>
+                </div>
+              ) : (
+                <div className="role-selector">
+                  {roles.map(role => (
+                    <div 
+                      key={role.id} 
+                      className={`role-option ${idRole === role.id ? 'selected' : ''}`}
+                      onClick={() => setIdRole(role.id)}
+                    >
+                      <span className="role-text">{role.nom}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            <IonButton 
+              expand="block" 
+              className="auth-button"
+              onClick={handleLogin}
+              disabled={isLoading}
             >
-              {roles.map(role => (
-                <IonSelectOption key={role.id} value={role.id}>
-                  {role.nom} {/* <-- affiche le NOM du rôle */}
-                </IonSelectOption>
-              ))}
-            </IonSelect>
-          )}
-        </IonItem>
-
-        {/* Bouton login */}
-        <IonButton expand="block" className="ion-margin-top" onClick={handleLogin}>
-          Se connecter
-        </IonButton>
+              {isLoading ? <IonSpinner name="dots" /> : "Login"}
+            </IonButton>
+          </div>
+        </div>
 
         <IonToast
           isOpen={toastMessage !== ''}

@@ -1,0 +1,252 @@
+.auth-container {
+  --ion-background-color: #f5f6fa;
+  // color: #2d3436;
+}
+
+.auth-background {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  // background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.auth-card {
+  background: white;
+  border-radius: 16px;
+  padding: 24px;
+  width: 100%;
+  max-width: 420px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.auth-header {
+  text-align: center;
+  margin-bottom: 24px;
+
+  h1 {
+    font-size: 24px;
+    font-weight: 700;
+    color: #2d3436;
+    margin: 0 0 8px 0;
+  }
+}
+
+.auth-subtitle {
+  color: #636e72;
+  font-size: 14px;
+  margin: 0;
+
+  .auth-toggle {
+    color: #5cabe7;
+    font-weight: 600;
+    cursor: pointer;
+    margin-left: 4px;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+.input-group {
+  margin-bottom: 16px;
+
+  label {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    color: #2d3436;
+    margin-bottom: 8px;
+  }
+}
+
+.auth-input {
+  border: 1px solid #dfe6e9;
+  border-radius: 8px;
+  --padding-start: 16px;
+  --padding-end: 16px;
+  --padding-top: 12px;
+  --padding-bottom: 12px;
+  font-size: 16px;
+
+  &.ion-focused {
+    border-color: #5cabe7;
+  }
+}
+
+.login-options {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  font-size: 14px;
+}
+
+.checkbox-container {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  color: #636e72;
+
+  input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+  }
+
+  .checkmark {
+    height: 18px;
+    width: 18px;
+    background-color: white;
+    border: 1px solid #b2bec3;
+    border-radius: 4px;
+    margin-right: 8px;
+    position: relative;
+    display: inline-block;
+  }
+
+  input:checked ~ .checkmark {
+    background-color: #5cabe7;
+    border-color: #5cabe7;
+  }
+
+  input:checked ~ .checkmark:after {
+    content: "";
+    position: absolute;
+    left: 6px;
+    top: 2px;
+    width: 4px;
+    height: 8px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+  }
+}
+
+.forgot-password {
+  color: #5cabe7;
+  font-weight: 600;
+  cursor: pointer;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.role-loading {
+  display: flex;
+  justify-content: center;
+  padding: 16px;
+}
+
+.role-selector {
+  display: flex;
+  gap: 4px;
+  border: 1px solid #dfe6e9;
+  border-radius: 8px ;
+  flex-wrap: wrap;
+  padding: 4px;
+  
+  // background: white;
+}
+
+.role-option {
+  padding: 12px 16px;
+  // border-right: 5px solid black;
+
+  // border: 1px solid #dfe6e9;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 14px;
+  flex: 1;
+  min-width: 120px;
+  text-align: center;
+  color: #2d3436;
+  // background: rgb(246, 249, 252);
+
+  &:hover {
+    border-color: #5cabe7;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  &.selected {
+    background-color: #5cabe7;
+    color: white;
+    border-color: #5cabe7;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+}
+
+.auth-button {
+  --border-radius: 8px;
+  --padding-top: 16px;
+  --padding-bottom: 16px;
+  margin: 24px 0;
+  font-weight: 600;
+  color: white;
+  --background: #5cabe7;
+  --background-activated: #5649c5;
+  --background-hover: #5d52d3;
+}
+
+.auth-divider {
+  display: flex;
+  align-items: center;
+  margin: 24px 0;
+  color: #636e72;
+  font-size: 14px;
+
+  &::before,
+  &::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background-color: #dfe6e9;
+  }
+
+  span {
+    padding: 0 16px;
+  }
+}
+
+.social-login {
+  display: flex;
+  gap: 12px;
+}
+
+.social-button {
+  --border-radius: 8px;
+  --padding-top: 12px;
+  --padding-bottom: 12px;
+  --border-color: #dfe6e9;
+  --color: #2d3436;
+  flex: 1;
+  font-weight: 500;
+
+  svg {
+    margin-right: 8px;
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 480px) {
+  .auth-card {
+    padding: 20px;
+  }
+
+  // .role-selector {
+  //   flex-direction: column;
+  //   gap: 8px;
+  // }
+
+  .role-option {
+    min-width: auto;
+  }
+
+  .social-login {
+    flex-direction: column;
+  }
+}

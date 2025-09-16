@@ -22,6 +22,13 @@ import '@ionic/react/css/text-transformation.css';
 import '@ionic/react/css/flex-utils.css';
 import '@ionic/react/css/display.css';
 
+import 'bootstrap/dist/css/bootstrap.min.css';
+// import 'primereact/resources/themes/lara-light-indigo/theme.css';
+// import 'primereact/resources/primereact.min.css';
+import 'primeicons/primeicons.css';
+// import 'primeflex/primeflex.css';
+
+
 /**
  * Ionic Dark Mode
  * -----------------------------------------------------
