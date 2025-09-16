@@ -12,10 +12,15 @@ import {
   IonDatetime,
   IonSelect,
   IonSelectOption,
-  IonToast
+  IonToast,
+  IonCard,
+  IonCardHeader,
+  IonCardTitle,
+  IonCardContent
 } from '@ionic/react';
 import axios from 'axios';
 import { API_BASE_URL } from '../../../config';
+import './CreerTrajetPage.scss';
 
 interface Vehicule {
   id: number;
@@ -32,7 +37,7 @@ interface Trajet {
   prixUniquePlace?: number;
 }
 
-const Trajet: React.FC = () => {
+const CreerTrajetPage: React.FC = () => {
   const [vehicules, setVehicules] = useState<Vehicule[]>([]);
   const [selectedVehiculeId, setSelectedVehiculeId] = useState<number | null>(null);
   const [depart, setDepart] = useState('');
@@ -41,7 +46,6 @@ const Trajet: React.FC = () => {
   const [prixUniquePlace, setPrixUniquePlace] = useState<number | undefined>();
   const [toastMessage, setToastMessage] = useState('');
 
-  // Récupérer les véhicules au chargement du composant
   useEffect(() => {
     const fetchVehicules = async () => {
       try {
@@ -94,51 +98,69 @@ const Trajet: React.FC = () => {
         </IonToolbar>
       </IonHeader>
 
-      <IonContent className="ion-padding">
-        <IonItem>
-          <IonLabel>Véhicule</IonLabel>
-          <IonSelect
-            value={selectedVehiculeId ?? undefined}
-            onIonChange={e => setSelectedVehiculeId(e.detail.value)}
-          >
-            {vehicules.map(v => (
-              <IonSelectOption key={v.id} value={v.id}>
-                {v.marque} {v.modele} - {v.plaque}
-              </IonSelectOption>
-            ))}
-          </IonSelect>
-        </IonItem>
+      <IonContent className="creertrajet-container" fullscreen>
+        <div className="creertrajet-background">
+          <IonCard className="creertrajet-card">
+            <IonCardHeader>
+              <IonCardTitle className="ion-text-center">
+                Remplissez les informations du trajet
+              </IonCardTitle>
+            </IonCardHeader>
 
-<IonItem>
-          <IonLabel position="floating">Départ *</IonLabel>
-          <IonInput value={depart} onIonInput={e => setDepart(e.detail.value!)} />
-        </IonItem>
+            <IonCardContent>
+              <IonItem>
+                <IonLabel>Véhicule *</IonLabel>
+                <IonSelect
+                  value={selectedVehiculeId ?? undefined}
+                  onIonChange={e => setSelectedVehiculeId(e.detail.value)}
+                >
+                  {vehicules.map(v => (
+                    <IonSelectOption key={v.id} value={v.id}>
+                      {v.marque} {v.modele} - {v.plaque}
+                    </IonSelectOption>
+                  ))}
+                </IonSelect>
+              </IonItem>
 
-        <IonItem>
-          <IonLabel position="floating">Arrivée *</IonLabel>
-          <IonInput value={arrivee} onIonInput={e => setArrivee(e.detail.value!)} />
-        </IonItem>
+              <IonItem>
+                <IonLabel position="floating">Départ *</IonLabel>
+                <IonInput value={depart} onIonInput={e => setDepart(e.detail.value!)} />
+              </IonItem>
 
-        <IonItem>
-          <IonLabel position="floating">Date et heure de départ</IonLabel>
-          <IonDatetime
-            value={dateDepart}
-            onIonChange={e => setDateDepart(e.detail.value!)}
-          />
-        </IonItem>
+              <IonItem>
+                <IonLabel position="floating">Arrivée *</IonLabel>
+                <IonInput value={arrivee} onIonInput={e => setArrivee(e.detail.value!)} />
+              </IonItem>
 
-        <IonItem>
-          <IonLabel position="floating">Prix unique par place</IonLabel>
-          <IonInput
-            type="number"
-            value={prixUniquePlace ?? ''}
-            onIonInput={e => setPrixUniquePlace(parseInt(e.detail.value!) || 0)}
-          />
-        </IonItem>
+              <IonItem>
+                <IonLabel position="floating">Date et heure de départ</IonLabel>
+                <IonDatetime
+                  value={dateDepart}
+                  onIonChange={e => setDateDepart(e.detail.value!)}
+                  presentation="date-time"
+                />
+              </IonItem>
 
-        <IonButton expand="block" color="success" className="ion-margin-top" onClick={handleCreate}>
-          Créer le trajet
-        </IonButton>
+              <IonItem>
+                <IonLabel position="floating">Prix unique par place</IonLabel>
+                <IonInput
+                  type="number"
+                  value={prixUniquePlace ?? ''}
+                  onIonInput={e => setPrixUniquePlace(parseInt(e.detail.value!) || 0)}
+                />
+              </IonItem>
+
+              <IonButton
+                expand="block"
+                color="success"
+                className="ion-margin-top"
+                onClick={handleCreate}
+              >
+                Créer le trajet
+              </IonButton>
+            </IonCardContent>
+          </IonCard>
+        </div>
 
         <IonToast
           isOpen={toastMessage !== ''}
@@ -151,4 +173,4 @@ const Trajet: React.FC = () => {
   );
 };
 
-export default Trajet;
+export default CreerTrajetPage;

@@ -1,4 +1,3 @@
-// pages/UtilisateurListeTrajets.tsx
 import React, { useState, useEffect } from 'react';
 import {
   IonPage,
@@ -27,6 +26,7 @@ import { calendar, time, people, car } from 'ionicons/icons';
 import axios from 'axios';
 import { useHistory } from 'react-router-dom';
 import { API_BASE_URL } from '../../../config';
+import './UtilisateurListeTrajets.scss'; // ✅ Import du SCSS
 
 interface Trajet {
   id: number;
@@ -64,7 +64,7 @@ const ListeTrajet: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [showToast, setShowToast] = useState(false);
 
-  // Charger tous les trajets avec détails véhicule et places disponibles
+  // -------------------- Récupération des données --------------------
   const fetchTrajets = async () => {
     try {
       setLoading(true);
@@ -85,8 +85,7 @@ const ListeTrajet: React.FC = () => {
             const placesDisponibles = (vehicule.nombrePlace || 4) - reservationsTrajet.length;
 
             return { ...trajet, vehicule, placesDisponibles: Math.max(0, placesDisponibles) };
-          } catch (error) {
-            console.error('Erreur lors du chargement des détails du trajet:', error);
+          } catch {
             return { ...trajet, placesDisponibles: 0 };
           }
         })
@@ -94,8 +93,7 @@ const ListeTrajet: React.FC = () => {
 
       setTrajets(trajetsAvecDetails);
       setFilteredTrajets(trajetsAvecDetails);
-    } catch (error) {
-      console.error(error);
+    } catch {
       setToastMessage('Impossible de charger les trajets');
     } finally {
       setLoading(false);
@@ -106,7 +104,7 @@ const ListeTrajet: React.FC = () => {
     fetchTrajets();
   }, []);
 
-  // Filtrage des trajets
+  // -------------------- Filtrage --------------------
   useEffect(() => {
     let filtered = trajets;
 
@@ -131,7 +129,7 @@ const ListeTrajet: React.FC = () => {
     setFilteredTrajets(filtered);
   }, [searchText, filterDepart, filterArrivee, trajets]);
 
-  // Formater la date et l'heure
+  // -------------------- Helpers --------------------
   const formatDate = (dateString?: string) => {
     if (!dateString) return 'Date non spécifiée';
     try {
@@ -159,21 +157,13 @@ const ListeTrajet: React.FC = () => {
     }
   };
 
-  // Actions utilisateur
+  // -------------------- Actions --------------------
   const handleAcheterPlaceWithCheck = (id: number) => {
     if (sessionStorage.getItem('abonnement') !== 'true') {
       setShowToast(true);
       return;
     }
-    handleAcheterPlace(id);
-  };
-
-  const handleAcheterPlace = (trajetId: number) => {
-    history.push(`/utilisateur/reserver-trajet/${trajetId}`);
-  };
-
-  const handleVoirDetails = (trajetId: number) => {
-    history.push(`/utilisateur/detail-trajet/${trajetId}`);
+    history.push(`/utilisateur/reserver-trajet/${id}`);
   };
 
   const getUniqueVilles = (field: 'depart' | 'arrivee') => {
@@ -204,20 +194,19 @@ const ListeTrajet: React.FC = () => {
         </IonToolbar>
       </IonHeader>
 
-      <IonContent className="ion-padding">
-        {/* Recherche et filtres */}
+      <IonContent className="liste-trajets ion-padding">
+        {/* --- Recherche & Filtres --- */}
         <IonSearchbar
           value={searchText}
           onIonInput={e => setSearchText(e.detail.value!)}
           placeholder="Rechercher un trajet, ville ou véhicule"
         />
 
-        <div style={{ display: 'flex', gap: '10px', marginBottom: '20px', flexWrap: 'wrap' }}>
+        <div className="filters">
           <IonSelect
             value={filterDepart}
             placeholder="Départ"
             onIonChange={e => setFilterDepart(e.detail.value)}
-            style={{ minWidth: '120px' }}
           >
             <IonSelectOption value="">Tous les départs</IonSelectOption>
             {getUniqueVilles('depart').map(ville => (
@@ -229,7 +218,6 @@ const ListeTrajet: React.FC = () => {
             value={filterArrivee}
             placeholder="Arrivée"
             onIonChange={e => setFilterArrivee(e.detail.value)}
-            style={{ minWidth: '120px' }}
           >
             <IonSelectOption value="">Toutes les arrivées</IonSelectOption>
             {getUniqueVilles('arrivee').map(ville => (
@@ -250,7 +238,7 @@ const ListeTrajet: React.FC = () => {
           </IonButton>
         </div>
 
-        {/* Liste des trajets */}
+        {/* --- Liste des trajets --- */}
         <IonList>
           {filteredTrajets.length === 0 ? (
             <IonItem>
@@ -261,7 +249,7 @@ const ListeTrajet: React.FC = () => {
             </IonItem>
           ) : (
             filteredTrajets.map(trajet => (
-              <IonCard key={trajet.id}>
+              <IonCard key={trajet.id} className="trajet-card">
                 <IonCardHeader>
                   <IonCardTitle>
                     {trajet.depart} → {trajet.arrivee}
@@ -269,36 +257,24 @@ const ListeTrajet: React.FC = () => {
                 </IonCardHeader>
 
                 <IonCardContent>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px', flexWrap: 'wrap', gap: '10px' }}>
+                  <div className="trajet-header">
                     <IonBadge color="primary">#{trajet.id}</IonBadge>
                     {trajet.prixUniquePlace && <IonBadge color="success">{trajet.prixUniquePlace} Ar</IonBadge>}
-
                     <IonChip color={trajet.placesDisponibles && trajet.placesDisponibles > 0 ? 'success' : 'danger'}>
-                      <IonIcon icon={people} style={{ marginRight: '6px' }} />
+                      <IonIcon icon={people} />
                       {trajet.placesDisponibles !== undefined ? `${trajet.placesDisponibles} place(s)` : 'N/A'}
                     </IonChip>
                   </div>
 
-                  <div style={{ marginBottom: '15px' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', marginBottom: '8px' }}>
-                      <IonIcon icon={calendar} style={{ marginRight: '8px', color: '#3880ff' }} />
-                      <strong>Date:</strong> {formatDate(trajet.dateDepart)}
-                    </div>
-
-                    <div style={{ display: 'flex', alignItems: 'center', marginBottom: '8px' }}>
-                      <IonIcon icon={time} style={{ marginRight: '8px', color: '#3880ff' }} />
-                      <strong>Heure:</strong> {formatHeure(trajet.dateDepart)}
-                    </div>
-
+                  <div className="trajet-details">
+                    <div><IonIcon icon={calendar} /> <strong>Date:</strong> {formatDate(trajet.dateDepart)}</div>
+                    <div><IonIcon icon={time} /> <strong>Heure:</strong> {formatHeure(trajet.dateDepart)}</div>
                     {trajet.vehicule && (
-                      <div style={{ display: 'flex', alignItems: 'center', marginBottom: '8px' }}>
-                        <IonIcon icon={car} style={{ marginRight: '8px', color: '#3880ff' }} />
-                        <strong>Véhicule:</strong> {trajet.vehicule.marque} {trajet.vehicule.modele} ({trajet.vehicule.plaque})
-                      </div>
+                      <div><IonIcon icon={car} /> <strong>Véhicule:</strong> {trajet.vehicule.marque} {trajet.vehicule.modele} ({trajet.vehicule.plaque})</div>
                     )}
                   </div>
 
-                  <div style={{ display: 'flex', gap: '10px', justifyContent: 'space-between' }}>
+                  <div className="trajet-actions">
                     <IonButton
                       color="success"
                       expand="block"
@@ -307,14 +283,6 @@ const ListeTrajet: React.FC = () => {
                     >
                       {!trajet.placesDisponibles || trajet.placesDisponibles <= 0 ? 'Complet' : 'Réserver'}
                     </IonButton>
-
-                    {/* <IonButton
-                      color="primary"
-                      fill="outline"
-                      onClick={() => handleVoirDetails(trajet.id)}
-                    >
-                      Détails
-                    </IonButton> */}
                   </div>
                 </IonCardContent>
               </IonCard>

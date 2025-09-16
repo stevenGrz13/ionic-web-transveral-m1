@@ -20,10 +20,11 @@ import {
   IonButtons,
   IonIcon
 } from '@ionic/react';
-import { car, calendar, location, cash } from 'ionicons/icons';
+import { car, calendar, location } from 'ionicons/icons';
 import axios from 'axios';
 import { useHistory, useParams } from 'react-router-dom';
 import { API_BASE_URL } from '../../../config';
+import './ChauffeurTrajetsVehicule.scss';   // ✅ import du CSS
 
 interface Vehicule {
   id: number;
@@ -52,7 +53,6 @@ const TrajetsVehicule: React.FC = () => {
   const [showAllTrajets, setShowAllTrajets] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
 
-  // Charger les détails du véhicule
   const fetchVehicule = async () => {
     try {
       const res = await axios.get<Vehicule>(`${API_BASE_URL}/VehiculeApi/${vehiculeId}`);
@@ -63,11 +63,10 @@ const TrajetsVehicule: React.FC = () => {
     }
   };
 
-  // Charger les trajets de ce véhicule
   const fetchTrajetsVehicule = async () => {
     try {
       const res = await axios.get<Trajet[]>(`${API_BASE_URL}/TrajetApi`);
-      const trajetsVehicule = res.data.filter(trajet => trajet.idVehicule === parseInt(vehiculeId));
+      const trajetsVehicule = res.data.filter(t => t.idVehicule === parseInt(vehiculeId));
       setTrajets(trajetsVehicule);
     } catch (err) {
       console.error(err);
@@ -75,7 +74,6 @@ const TrajetsVehicule: React.FC = () => {
     }
   };
 
-  // Charger tous les trajets (pour le bouton "Tous les trajets")
   const fetchAllTrajets = async () => {
     try {
       const res = await axios.get<Trajet[]>(`${API_BASE_URL}/TrajetApi`);
@@ -96,7 +94,6 @@ const TrajetsVehicule: React.FC = () => {
 
   const formatDate = (dateString?: string) => {
     if (!dateString) return 'Date non spécifiée';
-    
     const date = new Date(dateString);
     return new Intl.DateTimeFormat('fr-FR', {
       weekday: 'long',
@@ -108,21 +105,9 @@ const TrajetsVehicule: React.FC = () => {
     }).format(date);
   };
 
-  const handleCreateTrajet = () => {
-    history.push('/chauffeur/creer-trajet');
-  };
-
-  const handleEditTrajet = (trajetId: number) => {
-    history.push(`/chauffeur/modifier-trajet/${trajetId}`);
-  };
-
-  const handleViewAllTrajets = () => {
-    fetchAllTrajets();
-  };
-
-  const handleBackToVehiculeTrajets = () => {
-    setShowAllTrajets(false);
-  };
+  const handleCreateTrajet = () => history.push('/chauffeur/creer-trajet');
+  const handleViewAllTrajets = () => fetchAllTrajets();
+  const handleBackToVehiculeTrajets = () => setShowAllTrajets(false);
 
   const displayedTrajets = showAllTrajets ? allTrajets : trajets;
 
@@ -178,46 +163,33 @@ const TrajetsVehicule: React.FC = () => {
             displayedTrajets.map(trajet => (
               <IonCard key={trajet.id}>
                 <IonCardContent>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
-                    <IonBadge color="primary">
-                      #{trajet.id}
-                    </IonBadge>
+                  <div className="trajet-header">
+                    <IonBadge color="primary">#{trajet.id}</IonBadge>
                     {trajet.prixUniquePlace && (
-                      <IonBadge color="success">
-                        {trajet.prixUniquePlace} Ar
-                      </IonBadge>
+                      <IonBadge color="success">{trajet.prixUniquePlace} Ar</IonBadge>
                     )}
                   </div>
 
-                  <div style={{ marginBottom: '15px' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', marginBottom: '5px' }}>
-                      <IonIcon icon={location} style={{ marginRight: '8px' }} />
+                  <div className="trajet-info">
+                    <div className="trajet-line">
+                      <IonIcon icon={location} className="trajet-icon" />
                       <strong>Départ:</strong> {trajet.depart}
                     </div>
-                    <div style={{ display: 'flex', alignItems: 'center', marginBottom: '5px' }}>
-                      <IonIcon icon={location} style={{ marginRight: '8px' }} />
+                    <div className="trajet-line">
+                      <IonIcon icon={location} className="trajet-icon" />
                       <strong>Arrivée:</strong> {trajet.arrivee}
                     </div>
-                    <div style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
-                      <IonIcon icon={calendar} style={{ marginRight: '8px' }} />
+                    <div className="trajet-line">
+                      <IonIcon icon={calendar} className="trajet-icon" />
                       <strong>Date:</strong> {formatDate(trajet.dateDepart)}
                     </div>
                   </div>
 
                   {showAllTrajets && trajet.vehicule && (
-                    <div style={{ marginBottom: '15px', padding: '10px', backgroundColor: '#f8f9fa', borderRadius: '8px' }}>
+                    <div className="trajet-vehicule">
                       <strong>Véhicule:</strong> {trajet.vehicule.marque} {trajet.vehicule.modele} ({trajet.vehicule.plaque})
                     </div>
                   )}
-
-                  {/* <div style={{ display: 'flex', gap: '10px' }}>
-                    <IonButton size="small" onClick={() => handleEditTrajet(trajet.id)}>
-                      Modifier
-                    </IonButton>
-                    <IonButton size="small" color="medium">
-                      Détails
-                    </IonButton>
-                  </div> */}
                 </IonCardContent>
               </IonCard>
             ))

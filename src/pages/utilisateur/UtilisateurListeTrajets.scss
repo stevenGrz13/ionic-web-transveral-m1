@@ -1,0 +1,63 @@
+.liste-trajets {
+  --ion-background-color: #f5f6fa;
+
+  .filters {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+
+    ion-select {
+      min-width: 140px;
+    }
+  }
+
+  .trajet-card {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+    margin-bottom: 20px;
+
+    ion-card-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: #2d3436;
+    }
+
+    .trajet-header {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+
+      ion-chip {
+        ion-icon {
+          margin-right: 6px;
+        }
+      }
+    }
+
+    .trajet-details {
+      div {
+        display: flex;
+        align-items: center;
+        margin-bottom: 8px;
+        color: #2d3436;
+
+        ion-icon {
+          margin-right: 8px;
+          color: #3880ff;
+        }
+      }
+    }
+
+    .trajet-actions {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      margin-top: 15px;
+    }
+  }
+}

@@ -1,0 +1,50 @@
+.mesvehicules-container {
+  --ion-background-color: #f5f6fa;
+  padding: 20px;
+}
+
+.loading {
+  display: flex;
+  justify-content: center;
+  padding: 40px;
+}
+
+.empty-text {
+  text-align: center;
+  color: #636e72;
+  font-size: 16px;
+  margin-top: 40px;
+}
+
+.vehicule-card {
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+  margin-bottom: 20px;
+  transition: transform 0.2s ease;
+
+  &:hover {
+    transform: translateY(-3px);
+  }
+
+  .car-icon {
+    color: #5cabe7;
+    margin-right: 8px;
+    font-size: 20px;
+  }
+
+  .vehicule-info {
+    margin: 6px 0;
+    color: #2d3436;
+    font-size: 15px;
+  }
+}
+
+.create-trajet-btn {
+  --border-radius: 8px;
+  margin-top: 24px;
+  font-weight: 600;
+  color: white;
+  --background: #5cabe7;
+  --background-activated: #5649c5;
+  --background-hover: #5d52d3;
+}

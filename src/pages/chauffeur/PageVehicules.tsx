@@ -6,22 +6,27 @@ import {
   IonToolbar,
   IonTitle,
   IonContent,
-  IonList,
-  IonItem,
-  IonLabel,
+  IonCard,
+  IonCardHeader,
+  IonCardTitle,
+  IonCardContent,
   IonButton,
   IonModal,
   IonInput,
+  IonItem,
+  IonLabel,
   IonItemDivider,
   IonToast,
   IonFab,
   IonFabButton,
-  IonIcon
+  IonIcon,
+  IonSpinner
 } from '@ionic/react';
-import { add } from 'ionicons/icons';
+import { add, car } from 'ionicons/icons';
 import axios from 'axios';
 import { useHistory } from 'react-router';
 import { API_BASE_URL } from '../../../config';
+import './MesVehicules.scss';
 
 interface Vehicule {
   id: number;
@@ -33,7 +38,7 @@ interface Vehicule {
 }
 
 const PageVehicules: React.FC = () => {
-  const history = useHistory(); 
+  const history = useHistory();
   const [vehicules, setVehicules] = useState<Vehicule[]>([]);
   const [selectedVehicule, setSelectedVehicule] = useState<Vehicule | null>(null);
   const userId = Number.parseInt(sessionStorage.getItem('userId') + '');
@@ -47,6 +52,7 @@ const PageVehicules: React.FC = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [addModalOpen, setAddModalOpen] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
+  const [loading, setLoading] = useState(true);
 
   const fetchVehicules = async () => {
     try {
@@ -55,6 +61,8 @@ const PageVehicules: React.FC = () => {
     } catch (err) {
       console.error(err);
       setToastMessage('Impossible de charger les véhicules');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -73,21 +81,19 @@ const PageVehicules: React.FC = () => {
       modele: '',
       plaque: '',
       nombrePlace: undefined,
-      idUtilisateur: 1 // À remplacer par l'ID utilisateur réel
+      idUtilisateur: userId
     });
     setAddModalOpen(true);
   };
 
   const handleSave = async () => {
     if (!selectedVehicule) return;
-
     try {
       await axios.put(`${API_BASE_URL}/VehiculeApi/${selectedVehicule.id}`, selectedVehicule);
       setToastMessage('Véhicule mis à jour !');
       setModalOpen(false);
       fetchVehicules();
-    } catch (err) {
-      console.error(err);
+    } catch {
       setToastMessage('Erreur lors de la mise à jour');
     }
   };
@@ -98,45 +104,35 @@ const PageVehicules: React.FC = () => {
       setToastMessage('Véhicule ajouté !');
       setAddModalOpen(false);
       fetchVehicules();
-    } catch (err) {
-      console.error(err);
+    } catch {
       setToastMessage('Erreur lors de l\'ajout du véhicule');
     }
   };
 
   const handleDelete = async () => {
     if (!selectedVehicule) return;
-
     try {
       await axios.delete(`${API_BASE_URL}/VehiculeApi/${selectedVehicule.id}`);
       setToastMessage('Véhicule supprimé !');
       setModalOpen(false);
       fetchVehicules();
-    } catch (err) {
-      console.error(err);
+    } catch {
       setToastMessage('Erreur lors de la suppression');
     }
   };
 
   const handleChange = (field: keyof Vehicule, value: any) => {
     if (selectedVehicule) {
-      setSelectedVehicule(prev => ({
-        ...prev!,
-        [field]: value
-      }));
+      setSelectedVehicule(prev => ({ ...prev!, [field]: value }));
     }
   };
 
   const handleNewChange = (field: keyof Vehicule, value: any) => {
-    setNewVehicule(prev => ({
-      ...prev,
-      [field]: value
-    }));
+    setNewVehicule(prev => ({ ...prev, [field]: value }));
   };
 
-  // Fonction pour gérer le clic sur le bouton Trajets
   const handleTrajetsClick = (e: React.MouseEvent, vehiculeId: number) => {
-    e.stopPropagation(); // Empêche la propagation de l'événement
+    e.stopPropagation();
     history.push(`/chauffeur/trajets-vehicule/${vehiculeId}`);
   };
 
@@ -148,28 +144,41 @@ const PageVehicules: React.FC = () => {
         </IonToolbar>
       </IonHeader>
 
-      <IonContent className="ion-padding">
-        <IonList>
-          {vehicules.map(v => (
-            <IonItem key={v.id} button onClick={() => handleSelect(v)}>
-              <IonLabel>
-                {v.marque} {v.modele} - {v.plaque}
-                {v.nombrePlace && ` (${v.nombrePlace} places)`}
-              </IonLabel>
-              <IonButton 
-                size="small" 
-                color="secondary"
-                onClick={(e) => handleTrajetsClick(e, v.id)} // Utilisation de la nouvelle fonction
-              >
-                Trajets
-              </IonButton>
-            </IonItem>
-          ))}
-        </IonList>
-        
+      <IonContent className="mesvehicules-container" fullscreen>
+        {loading ? (
+          <div className="loading">
+            <IonSpinner name="dots" />
+          </div>
+        ) : vehicules.length === 0 ? (
+          <p className="empty-text">Aucun véhicule enregistré pour le moment</p>
+        ) : (
+          vehicules.map(v => (
+            <IonCard key={v.id} className="vehicule-card" button onClick={() => handleSelect(v)}>
+              <IonCardHeader>
+                <IonCardTitle>
+                  <IonIcon icon={car} className="car-icon" /> {v.marque} {v.modele}
+                </IonCardTitle>
+              </IonCardHeader>
+              <IonCardContent>
+                <p className="vehicule-info"><strong>Plaque :</strong> {v.plaque}</p>
+                {v.nombrePlace && (
+                  <p className="vehicule-info"><strong>Places :</strong> {v.nombrePlace}</p>
+                )}
+                <IonButton
+                  size="small"
+                  color="secondary"
+                  onClick={(e) => handleTrajetsClick(e, v.id)}
+                >
+                  Voir les trajets
+                </IonButton>
+              </IonCardContent>
+            </IonCard>
+          ))
+        )}
+
         <IonButton
           expand="block"
-          color="primary"
+          className="create-trajet-btn"
           onClick={() => {
             history.push({
               pathname: '/chauffeur/creer-trajet',
@@ -177,17 +186,17 @@ const PageVehicules: React.FC = () => {
             });
           }}
         >
-          Créer un trajet nouveau trajet
+          Créer un nouveau trajet
         </IonButton>
 
         {/* Bouton flottant pour ajouter un véhicule */}
         <IonFab vertical="bottom" horizontal="end" slot="fixed">
-          <IonFabButton onClick={handleAddNew}>
+          <IonFabButton onClick={handleAddNew} color="primary">
             <IonIcon icon={add} />
           </IonFabButton>
         </IonFab>
 
-        {/* Modal pour modifier un véhicule existant */}
+        {/* Modal modification */}
         <IonModal isOpen={modalOpen} onDidDismiss={() => setModalOpen(false)}>
           <IonHeader>
             <IonToolbar>
@@ -243,11 +252,11 @@ const PageVehicules: React.FC = () => {
           </IonContent>
         </IonModal>
 
-        {/* Modal pour ajouter un nouveau véhicule */}
+        {/* Modal ajout */}
         <IonModal isOpen={addModalOpen} onDidDismiss={() => setAddModalOpen(false)}>
           <IonHeader>
             <IonToolbar>
-              <IonTitle>Ajouter un nouveau véhicule</IonTitle>
+              <IonTitle>Ajouter un véhicule</IonTitle>
             </IonToolbar>
           </IonHeader>
           <IonContent className="ion-padding">
@@ -287,9 +296,9 @@ const PageVehicules: React.FC = () => {
 
             <IonItemDivider />
 
-            <IonButton 
-              expand="block" 
-              color="success" 
+            <IonButton
+              expand="block"
+              color="success"
               onClick={handleCreate}
               disabled={!newVehicule.marque || !newVehicule.modele || !newVehicule.plaque}
             >

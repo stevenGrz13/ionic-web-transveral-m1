@@ -1,0 +1,62 @@
+.chauffeur-container {
+  --ion-background-color: #f5f6fa;
+}
+
+.chauffeur-background {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.chauffeur-card {
+  background: white;
+  border-radius: 16px;
+  padding: 28px 24px;
+  width: 100%;
+  max-width: 420px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.chauffeur-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: #2d3436;
+  margin-bottom: 6px;
+}
+
+.chauffeur-subtitle {
+  color: #636e72;
+  font-size: 14px;
+  margin-bottom: 20px;
+}
+
+.chauffeur-list {
+  background: transparent;
+  ion-item {
+    --background: #ffffff;
+    --border-color: #dfe6e9;
+    border-radius: 12px;
+    margin: 10px 0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    --padding-start: 16px;
+  }
+
+  ion-label {
+    font-size: 16px;
+    font-weight: 500;
+    color: #2d3436;
+  }
+}
+
+.logout-card {
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.logout-buttons {
+  display: flex;
+  gap: 10px;
+}
