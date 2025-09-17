@@ -7,7 +7,6 @@ import {
   IonContent,
   IonCard,
   IonCardHeader,
-  IonCardTitle,
   IonCardContent,
   IonButton,
   IonModal,
@@ -17,18 +16,16 @@ import {
   IonFabButton,
   IonIcon,
   IonChip,
-  IonCard,
-  IonCardContent,
-  IonCardHeader,
   IonText,
   IonGrid,
   IonRow,
   IonCol,
-  IonBadge,
   IonAlert,
   IonSkeletonText,
   IonButtons,
-  IonImg
+  IonImg,
+  IonItem,
+  IonLabel
 } from '@ionic/react';
 import { 
   add, 
