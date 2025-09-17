@@ -11,6 +11,7 @@ import ListeTrajet from "../../pages/utilisateur/ListeTrajet";
 import PageReservation from "../../pages/utilisateur/PageReservation";
 import PassagerAbonnement from "../../pages/utilisateur/PassagerAbonnement";
 import ChauffeurPage from "../../pages/chauffeur/ChauffeurPage";
+import UtilisateurPage from "../../pages/utilisateur/UtilisateurPage";
 
 export const chauffeurConfig: NavItem[] = [
   { tab: "home", href: "/chauffeur", icon: 'lni lni-home-2', label: "Home", component: ChauffeurPage },
@@ -20,9 +21,9 @@ export const chauffeurConfig: NavItem[] = [
 
 // Exemple Client
 export const userTabs: NavItem[] = [
-  { tab: "home", href: "/home", icon: home, label: "Home", component: APropos },
-  { tab: "invoices", href: "/invoices", icon: airplane, label: "My Invoices", component: MesVoyages },
-  { tab: "profile", href: "/profile", icon: map, label: "Profile", component: ListeTrajet },
-  { tab: "profile", href: "/profile", icon: calendar, label: "Profile", component: PageReservation },
-  { tab: "profile", href: "/profile", icon: airplane, label: "Profile", component: PassagerAbonnement },
+  { tab: "home", href: "/utilisateur", icon: 'lni lni-home-2', label: "Home", component: UtilisateurPage },
+  { tab: "invoices", href: "/utilisateur/trajets", icon: 'lni lni-road-1', label: "Trajets", component: ListeTrajet },
+  { tab: "mes-voyages", href: "/utilisateur/mes-voyages", icon: 'lni lni-calendar-days', label: "Mes voyages", component: PageReservation },
+  { tab: "a-propos", href: "/utilisateur/a-propos", icon: 'lni lni-user-4', label: "À propos", component: PassagerAbonnement },
+  { tab: "abonnement", href: "/utilisateur/abonnement", icon: 'lni lni-credit-card-multiple', label: "Abonnement", component: PassagerAbonnement },
 ];

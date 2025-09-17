@@ -10,6 +10,7 @@ import { Redirect, Route } from "react-router";
 import { NavItem } from "../../types/nav.type";
 import "./page.scss";
 import TrajetsVehicule from "../../pages/chauffeur/TrajetsVehicule";
+import PageReservation from "../../pages/utilisateur/PageReservation";
 
 interface TabsProps {
   tabs: NavItem[];
@@ -24,6 +25,7 @@ const Navigation: React.FC<TabsProps> = ({ tabs, defaultRoute = "/home" }) => {
           <Route key={tab.tab} exact path={tab.href} component={tab.component} />
         ))}
         <Route path="/chauffeur/trajets-vehicule/:vehiculeId" component={TrajetsVehicule} />
+        <Route path="/utilisateur/reserver-trajet/:trajetId" component={PageReservation} />
         <Redirect exact from="/" to={defaultRoute} />
       </IonRouterOutlet>
 
