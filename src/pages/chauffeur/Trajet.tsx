@@ -25,10 +25,10 @@ import {
   IonBackButton,
   IonButtons
 } from '@ionic/react';
-import { 
-  carOutline, 
-  locationOutline, 
-  calendarOutline, 
+import {
+  carOutline,
+  locationOutline,
+  calendarOutline,
   cashOutline,
   checkmarkCircleOutline,
   arrowBackOutline
@@ -103,7 +103,7 @@ const Trajet: React.FC = () => {
       await axios.post(`${API_BASE_URL}/TrajetApi`, newTrajet);
       setShowSuccess(true);
       setToastMessage('Trajet créé avec succès !');
-      
+
       // Réinitialiser le formulaire après un délai
       setTimeout(() => {
         setDepart('');
@@ -172,29 +172,29 @@ const Trajet: React.FC = () => {
                   <IonIcon icon={locationOutline} className="section-icon" />
                   Itinéraire
                 </IonText>
-                
+
                 <IonGrid className="route-grid">
                   <IonRow>
                     <IonCol>
                       <IonItem className="custom-item route-item" lines="none">
                         <IonLabel position="stacked">Départ *</IonLabel>
-                        <IonInput 
-                          value={depart} 
-                          onIonInput={e => setDepart(e.detail.value!)} 
+                        <IonInput
+                          value={depart}
+                          onIonInput={e => setDepart(e.detail.value!)}
                           placeholder="Lieu de départ"
                           className="custom-input"
                         />
                       </IonItem>
                     </IonCol>
                   </IonRow>
-                  
+
                   <IonRow>
                     <IonCol>
                       <IonItem className="custom-item route-item" lines="none">
                         <IonLabel position="stacked">Arrivée *</IonLabel>
-                        <IonInput 
-                          value={arrivee} 
-                          onIonInput={e => setArrivee(e.detail.value!)} 
+                        <IonInput
+                          value={arrivee}
+                          onIonInput={e => setArrivee(e.detail.value!)}
                           placeholder="Destination"
                           className="custom-input"
                         />
@@ -210,33 +210,19 @@ const Trajet: React.FC = () => {
                   <IonIcon icon={calendarOutline} className="section-icon" />
                   Date et heure
                 </IonText>
+
                 <IonItem className="custom-item datetime-item" lines="none">
                   <IonLabel position="stacked">Date et heure de départ</IonLabel>
-                  <IonDatetimeButton datetime="datetime" />
-                  
-                  <IonModal keepContentsMounted={true} trigger="datetime">
-                    <IonContent>
-                      <IonDatetime 
-                        id="datetime"
+
+                  <IonDatetime
+                        id="datetime"                      // doit correspondre à datetime du bouton
                         value={dateDepart}
                         onIonChange={e => setDateDepart(e.detail.value!)}
                         presentation="date-time"
                         className="custom-datetime"
                       />
-                      <div className="datetime-actions">
-                        <IonButton 
-                          fill="clear" 
-                          onClick={() => {
-                            const modal = document.querySelector('ion-modal');
-                            modal?.dismiss();
-                          }}
-                        >
-                          Fermer
-                        </IonButton>
-                      </div>
-                    </IonContent>
-                  </IonModal>
                 </IonItem>
+
               </div>
 
               {/* Prix */}
@@ -258,9 +244,9 @@ const Trajet: React.FC = () => {
               </div>
 
               {/* Bouton de création */}
-              <IonButton 
-                expand="block" 
-                color="primary" 
+              <IonButton
+                expand="block"
+                color="primary"
                 className="create-button"
                 onClick={handleCreate}
                 disabled={isLoading || !depart || !arrivee || !selectedVehiculeId}
