@@ -1,0 +1,55 @@
+.apropos-container {
+  background-color: #f9f9f9;
+  min-height: 100%;
+}
+
+.apropos-greeting {
+  text-align: center;
+  margin: 20px 0;
+  font-weight: 600;
+  font-size: 1.5rem;
+}
+
+.apropos-card {
+  border-radius: 15px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  margin-bottom: 20px;
+}
+
+.apropos-grid {
+  font-size: 0.95rem;
+}
+
+.abonnement-table {
+  .table-header {
+    font-weight: 600;
+    background-color: #e9f1ff;
+    border-radius: 10px;
+    padding: 10px 0;
+  }
+  .table-row {
+    padding: 8px 0;
+    &:nth-child(even) {
+      background-color: #f5f7fb;
+    }
+  }
+}
+
+.apropos-no-abonnement {
+  text-align: center;
+  color: #777;
+  font-style: italic;
+}
+
+.apropos-spinner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: 50px;
+
+  p {
+    margin-top: 10px;
+    color: #555;
+  }
+}

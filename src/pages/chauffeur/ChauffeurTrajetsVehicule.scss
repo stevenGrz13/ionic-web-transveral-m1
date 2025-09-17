@@ -1,0 +1,30 @@
+/* pages/ChauffeurTrajetsVehicule.css */
+
+.trajet-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.trajet-info {
+  margin-bottom: 15px;
+}
+
+.trajet-line {
+  display: flex;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.trajet-icon {
+  margin-right: 8px;
+  font-size: 1.2rem;
+}
+
+.trajet-vehicule {
+  margin-bottom: 15px;
+  padding: 10px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+}

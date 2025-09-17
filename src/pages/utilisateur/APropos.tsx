@@ -1,4 +1,3 @@
-// pages/ChauffeurAPropos.tsx
 import React, { useEffect, useState } from 'react';
 import {
   IonPage,
@@ -14,10 +13,12 @@ import {
   IonGrid,
   IonRow,
   IonCol,
-  IonText
+  IonText,
+  IonSpinner
 } from '@ionic/react';
 import axios from 'axios';
 import { API_BASE_URL } from '../../../config';
+import './ChauffeurAPropos.scss';
 
 interface Utilisateur {
   id: number;
@@ -26,7 +27,6 @@ interface Utilisateur {
   email: string;
   numero?: string;
   idRole: number;
-  motDePasse?: string;
   createdAt?: Date;
 }
 
@@ -41,6 +41,7 @@ interface AbonnementUtilisateur {
 const APropos: React.FC = () => {
   const [utilisateur, setUtilisateur] = useState<Utilisateur | null>(null);
   const [abonnements, setAbonnements] = useState<AbonnementUtilisateur[]>([]);
+  const [loading, setLoading] = useState(true);
   const [toastMessage, setToastMessage] = useState('');
 
   const userId = sessionStorage.getItem('userId');
@@ -67,8 +68,12 @@ const APropos: React.FC = () => {
   };
 
   useEffect(() => {
-    fetchUtilisateur();
-    fetchAbonnements();
+    if (!userId) {
+      setToastMessage("Utilisateur non connecté");
+      setLoading(false);
+      return;
+    }
+    Promise.all([fetchUtilisateur(), fetchAbonnements()]).finally(() => setLoading(false));
   }, []);
 
   const nomMois = (mois: number) =>
@@ -77,81 +82,82 @@ const APropos: React.FC = () => {
   return (
     <IonPage>
       <IonHeader>
-        <IonToolbar>
+        <IonToolbar color="primary">
           <IonTitle>Mon profil</IonTitle>
         </IonToolbar>
       </IonHeader>
 
-      <IonContent className="ion-padding">
-
-        {/* -------- Message d’accueil -------- */}
-        {utilisateur && (
-          <IonText color="primary">
-            <h2 style={{ fontWeight: 600, marginBottom: '20px' }}>
-              Bonjour {utilisateur.prenom} {utilisateur.nom}
-            </h2>
-          </IonText>
-        )}
-
-        {/* -------- Informations utilisateur -------- */}
-        {utilisateur ? (
-          <IonCard>
-            <IonCardHeader>
-              <IonCardTitle>Informations personnelles</IonCardTitle>
-            </IonCardHeader>
-            <IonCardContent>
-              <IonGrid>
-                <IonRow>
-                  <IonCol size="4"><strong>Email</strong></IonCol>
-                  <IonCol>{utilisateur.email}</IonCol>
-                </IonRow>
-                {utilisateur.numero && (
-                  <IonRow>
-                    <IonCol size="4"><strong>Téléphone</strong></IonCol>
-                    <IonCol>{utilisateur.numero}</IonCol>
-                  </IonRow>
-                )}
-                <IonRow>
-                  <IonCol size="4"><strong>Rôle</strong></IonCol>
-                  <IonCol>{utilisateur.idRole === 2 ? 'Passager' : 'Autre'}</IonCol>
-                </IonRow>
-                <IonRow>
-                  <IonCol size="4"><strong>Date d'inscription</strong></IonCol>
-                  <IonCol>{new Date(utilisateur.createdAt ?? '').toLocaleDateString()}</IonCol>
-                </IonRow>
-              </IonGrid>
-            </IonCardContent>
-          </IonCard>
+      <IonContent className="apropos-container ion-padding">
+        {loading ? (
+          <div className="apropos-spinner">
+            <IonSpinner name="crescent" />
+            <p>Chargement…</p>
+          </div>
         ) : (
-          <p>Chargement des informations…</p>
-        )}
-
-        {/* -------- Tableau des abonnements -------- */}
-        <IonCard>
-          <IonCardHeader>
-            <IonCardTitle>Abonnements payés</IonCardTitle>
-          </IonCardHeader>
-          <IonCardContent>
-            {abonnements.length > 0 ? (
-              <IonGrid>
-                <IonRow style={{ fontWeight: 600, borderBottom: '1px solid #ccc', marginBottom: '6px' }}>
-                  <IonCol>Mois</IonCol>
-                  <IonCol>Année</IonCol>
-                  <IonCol>Date de paiement</IonCol>
-                </IonRow>
-                {abonnements.map(ab => (
-                  <IonRow key={ab.id} style={{ borderBottom: '1px solid #eee', padding: '4px 0' }}>
-                    <IonCol className="text-capitalize">{nomMois(ab.idMois)}</IonCol>
-                    <IonCol>{ab.annee}</IonCol>
-                    <IonCol>{new Date(ab.datePaiement).toLocaleDateString()}</IonCol>
-                  </IonRow>
-                ))}
-              </IonGrid>
-            ) : (
-              <p>Aucun abonnement trouvé.</p>
+          <>
+            {utilisateur && (
+              <IonText color="primary" className="apropos-greeting">
+                <h2>Bonjour {utilisateur.prenom} {utilisateur.nom}</h2>
+              </IonText>
             )}
-          </IonCardContent>
-        </IonCard>
+
+            {utilisateur && (
+              <IonCard className="apropos-card">
+                <IonCardHeader>
+                  <IonCardTitle>Informations personnelles</IonCardTitle>
+                </IonCardHeader>
+                <IonCardContent>
+                  <IonGrid className="apropos-grid">
+                    <IonRow>
+                      <IonCol size="4"><strong>Email</strong></IonCol>
+                      <IonCol>{utilisateur.email}</IonCol>
+                    </IonRow>
+                    {utilisateur.numero && (
+                      <IonRow>
+                        <IonCol size="4"><strong>Téléphone</strong></IonCol>
+                        <IonCol>{utilisateur.numero}</IonCol>
+                      </IonRow>
+                    )}
+                    <IonRow>
+                      <IonCol size="4"><strong>Rôle</strong></IonCol>
+                      <IonCol>{utilisateur.idRole === 2 ? 'Passager' : 'Autre'}</IonCol>
+                    </IonRow>
+                    <IonRow>
+                      <IonCol size="4"><strong>Date d'inscription</strong></IonCol>
+                      <IonCol>{new Date(utilisateur.createdAt ?? '').toLocaleDateString()}</IonCol>
+                    </IonRow>
+                  </IonGrid>
+                </IonCardContent>
+              </IonCard>
+            )}
+
+            <IonCard className="apropos-card">
+              <IonCardHeader>
+                <IonCardTitle>Abonnements payés</IonCardTitle>
+              </IonCardHeader>
+              <IonCardContent>
+                {abonnements.length > 0 ? (
+                  <IonGrid className="apropos-grid abonnement-table">
+                    <IonRow className="table-header">
+                      <IonCol>Mois</IonCol>
+                      <IonCol>Année</IonCol>
+                      <IonCol>Date de paiement</IonCol>
+                    </IonRow>
+                    {abonnements.map(ab => (
+                      <IonRow key={ab.id} className="table-row">
+                        <IonCol className="text-capitalize">{nomMois(ab.idMois)}</IonCol>
+                        <IonCol>{ab.annee}</IonCol>
+                        <IonCol>{new Date(ab.datePaiement).toLocaleDateString()}</IonCol>
+                      </IonRow>
+                    ))}
+                  </IonGrid>
+                ) : (
+                  <p className="apropos-no-abonnement">Aucun abonnement trouvé.</p>
+                )}
+              </IonCardContent>
+            </IonCard>
+          </>
+        )}
 
         <IonToast
           isOpen={toastMessage !== ''}

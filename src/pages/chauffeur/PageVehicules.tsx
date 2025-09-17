@@ -5,9 +5,10 @@ import {
   IonToolbar,
   IonTitle,
   IonContent,
-  IonList,
-  IonItem,
-  IonLabel,
+  IonCard,
+  IonCardHeader,
+  IonCardTitle,
+  IonCardContent,
   IonButton,
   IonModal,
   IonInput,
@@ -56,7 +57,7 @@ interface Vehicule {
 }
 
 const PageVehicules: React.FC = () => {
-  const history = useHistory(); 
+  const history = useHistory();
   const [vehicules, setVehicules] = useState<Vehicule[]>([]);
   const [selectedVehicule, setSelectedVehicule] = useState<Vehicule | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -116,14 +117,12 @@ const PageVehicules: React.FC = () => {
 
   const handleSave = async () => {
     if (!selectedVehicule) return;
-
     try {
       await axios.put(`${API_BASE_URL}/VehiculeApi/${selectedVehicule.id}`, selectedVehicule);
       setToastMessage('Véhicule mis à jour avec succès !');
       setEditModalOpen(false);
       fetchVehicules();
-    } catch (err) {
-      console.error(err);
+    } catch {
       setToastMessage('Erreur lors de la mise à jour');
     }
   };
@@ -134,44 +133,36 @@ const PageVehicules: React.FC = () => {
       setToastMessage('Véhicule ajouté avec succès !');
       setAddModalOpen(false);
       fetchVehicules();
-    } catch (err) {
-      console.error(err);
+    } catch {
       setToastMessage('Erreur lors de l\'ajout du véhicule');
     }
   };
 
   const handleDelete = async () => {
     if (!selectedVehicule) return;
-
     try {
       await axios.delete(`${API_BASE_URL}/VehiculeApi/${selectedVehicule.id}`);
       setToastMessage('Véhicule supprimé avec succès !');
       setEditModalOpen(false);
       setShowDeleteAlert(false);
       fetchVehicules();
-    } catch (err) {
-      console.error(err);
+    } catch {
       setToastMessage('Erreur lors de la suppression');
     }
   };
 
   const handleChange = (field: keyof Vehicule, value: any) => {
     if (selectedVehicule) {
-      setSelectedVehicule(prev => ({
-        ...prev!,
-        [field]: value
-      }));
+      setSelectedVehicule(prev => ({ ...prev!, [field]: value }));
     }
   };
 
   const handleNewChange = (field: keyof Vehicule, value: any) => {
-    setNewVehicule(prev => ({
-      ...prev,
-      [field]: value
-    }));
+    setNewVehicule(prev => ({ ...prev, [field]: value }));
   };
 
   const handleTrajetsClick = (e: React.MouseEvent, vehiculeId: number) => {
+    e.stopPropagation();
     e.stopPropagation();
     history.push(`/chauffeur/trajets-vehicule/${vehiculeId}`);
   };

@@ -2,21 +2,14 @@
 import React, { useEffect, useState } from 'react';
 import {
   IonPage,
-  IonHeader,
-  IonToolbar,
-  IonTitle,
   IonContent,
-  IonCard,
-  IonCardHeader,
-  IonCardTitle,
-  IonCardContent,
-  IonItem,
-  IonLabel,
+  IonSpinner,
   IonToast
 } from '@ionic/react';
 import axios from 'axios';
 
 import { API_BASE_URL } from '../../../config';
+import './ChauffeurAPropos.scss';
 
 interface Utilisateur {
   id: number;
@@ -32,17 +25,18 @@ interface Utilisateur {
 const AProposChauffeur: React.FC = () => {
   const [utilisateur, setUtilisateur] = useState<Utilisateur | null>(null);
   const [toastMessage, setToastMessage] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
 
   const fetchUtilisateur = async () => {
     try {
-      // Ici tu peux mettre l'ID du chauffeur connecté
       const userId = sessionStorage.getItem('userId');
       const res = await axios.get<Utilisateur>(`${API_BASE_URL}/UtilisateursApi/${userId}`);
-
       setUtilisateur(res.data);
     } catch (err) {
       console.error(err);
       setToastMessage("Impossible de charger les informations de l'utilisateur");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -52,42 +46,55 @@ const AProposChauffeur: React.FC = () => {
 
   return (
     <IonPage>
-      <IonHeader>
-        <IonToolbar>
-          <IonTitle>À propos de moi</IonTitle>
-        </IonToolbar>
-      </IonHeader>
+      <IonContent className="apropos-container" fullscreen>
+        <div className="apropos-background">
+          <div className="apropos-card">
+            <div className="apropos-header">
+              <h1>À propos de moi</h1>
+              <p className="apropos-subtitle">Informations personnelles du chauffeur</p>
+            </div>
 
-      <IonContent className="ion-padding">
-        {utilisateur ? (
-          <IonCard>
-            <IonCardHeader>
-              <IonCardTitle>{utilisateur.nom} {utilisateur.prenom}</IonCardTitle>
-            </IonCardHeader>
-            <IonCardContent>
-              <IonItem>
-                <IonLabel>Email</IonLabel>
-                <IonLabel>{utilisateur.email}</IonLabel>
-              </IonItem>
-              {utilisateur.numero && (
-                <IonItem>
-                  <IonLabel>Téléphone</IonLabel>
-                  <IonLabel>{utilisateur.numero}</IonLabel>
-                </IonItem>
-              )}
-              <IonItem>
-                <IonLabel>Rôle</IonLabel>
-                <IonLabel>{utilisateur.idRole === 1 ? 'Chauffeur' : 'Autre'}</IonLabel>
-              </IonItem>
-              <IonItem>
-                <IonLabel>Date Inscription</IonLabel>
-                <IonLabel>{utilisateur.createdAt + ''}</IonLabel>
-              </IonItem>
-            </IonCardContent>
-          </IonCard>
-        ) : (
-          <p>Chargement des informations...</p>
-        )}
+            {isLoading ? (
+              <div className="apropos-loading">
+                <IonSpinner name="dots" />
+                <span>Chargement...</span>
+              </div>
+            ) : utilisateur ? (
+              <div className="apropos-details">
+                <div className="apropos-field">
+                  <span className="label">Nom complet</span>
+                  <span className="value">{utilisateur.nom} {utilisateur.prenom}</span>
+                </div>
+
+                <div className="apropos-field">
+                  <span className="label">Email</span>
+                  <span className="value">{utilisateur.email}</span>
+                </div>
+
+                {utilisateur.numero && (
+                  <div className="apropos-field">
+                    <span className="label">Téléphone</span>
+                    <span className="value">{utilisateur.numero}</span>
+                  </div>
+                )}
+
+                <div className="apropos-field">
+                  <span className="label">Rôle</span>
+                  <span className="value">{utilisateur.idRole === 1 ? 'Chauffeur' : 'Autre'}</span>
+                </div>
+
+                <div className="apropos-field">
+                  <span className="label">Date d'inscription</span>
+                  <span className="value">
+                    {new Date(utilisateur.createdAt ?? '').toLocaleDateString()}
+                  </span>
+                </div>
+              </div>
+            ) : (
+              <p className="text-center">Aucune information disponible.</p>
+            )}
+          </div>
+        </div>
 
         <IonToast
           isOpen={toastMessage !== ''}
