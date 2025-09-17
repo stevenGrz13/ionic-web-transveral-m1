@@ -1,0 +1,225 @@
+
+
+.vehicules-content {
+  // --background: #f5f6fa;
+}
+
+.loading-container {
+  padding: 16px;
+}
+
+.skeleton-card {
+  margin-bottom: 16px;
+  
+  ion-card-content {
+    padding: 16px;
+  }
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 60vh;
+  text-align: center;
+  padding: 20px;
+  
+  .empty-icon {
+    font-size: 64px;
+    color: var(--ion-color-medium);
+    margin-bottom: 16px;
+  }
+  
+  h2 {
+    margin: 0 0 8px 0;
+    font-weight: 600;
+  }
+  
+  p {
+    margin: 0;
+    color: var(--ion-color-medium);
+  }
+}
+
+.vehicules-list {
+  padding: 16px;
+}
+
+.vehicle-card {
+  margin-bottom: 16px;
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  // background: #050fce;
+  border: var(--ion-color-primary-shade) 1px solid;
+  // color: dark;
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+  }
+  
+  .vehicle-header {
+    display: flex;
+    // align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+    color: white;
+
+    .icon-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: rgb(255, 255, 255);
+      // margin-right: 12px;
+
+      
+    }
+    
+    
+    
+    h2 {
+      margin: 0;
+      font-size: 1.2rem;
+      font-weight: 600;
+    }
+    
+    p {
+      margin: 4px 0 0 0;
+      color: var(--ion-color-medium);
+      font-size: 0.9rem;
+    }
+  }
+
+  .vehicle-icon {
+    font-size: 24px;
+    color: #f37a08;
+    margin: 0;
+    // margin-right: 12px;
+    // width: 24px;
+    // color: var(--ion-color-primary);
+  }
+  
+  .vehicle-details {
+    margin-bottom: 16px;
+    
+    ion-chip {
+      margin: 4px 8px 4px 0;
+    }
+  }
+  
+  .vehicle-actions {
+    display: flex;
+    // gap: 8px;
+    // flex-wrap: wrap;
+    
+    
+    ion-button {
+      flex: 1;
+      min-width: 120px;
+    }
+  }
+}
+
+
+// .vehicle-modal {
+//   --width: 100%;
+//   --max-width: 600px;
+//   --height: auto;
+//   --border-radius: 16px;
+  
+//   // ion-toolbar {
+//   //   --background: var(--ion-color-primary);
+//   //   --color: white;
+//   // }
+// }
+
+.form-container {
+  padding: 16px 0;
+}
+
+.form-item {
+  --border-radius: 12px;
+  --background: #f8f9fa;
+  margin-bottom: 16px;
+  
+  ion-label {
+    font-weight: 600;
+    color: var(--ion-color-dark);
+  }
+}
+
+.form-actions {
+  margin-top: 24px;
+  
+  ion-button {
+    margin-bottom: 12px;
+  }
+}
+
+.icon-button{
+  --background: white;
+}
+
+// Responsive
+@media (max-width: 768px) {
+  .vehicules-list {
+    padding: 8px;
+  }
+  
+  // .vehicle-card {
+  //   .vehicle-actions {
+  //     flex-direction: column;
+      
+  //     ion-button {
+  //       width: 100%;
+  //     }
+  //   }
+  // }
+}
+
+@media (max-width: 480px) {
+  .empty-state {
+    .empty-icon {
+      font-size: 48px;
+    }
+    
+    h2 {
+      font-size: 1.2rem;
+    }
+  }
+  
+  // .vehicle-card {
+  //   .vehicle-header {
+  //     flex-direction: column;
+  //     text-align: center;
+      
+  //     .vehicle-icon {
+  //       margin-right: 0;
+  //       margin-bottom: 8px;
+  //     }
+  //   }
+  // }
+}
+
+// Animation pour les modals
+// ion-modal.vehicle-modal {
+//   &::part(content) {
+//     animation: modal-scale-in 0.3s ease-out;
+//   }
+// }
+
+@keyframes modal-scale-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}

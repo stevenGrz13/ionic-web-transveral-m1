@@ -26,6 +26,8 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 // import 'primereact/resources/themes/lara-light-indigo/theme.css';
 // import 'primereact/resources/primereact.min.css';
 import 'primeicons/primeicons.css';
+import 'lineicons/dist/lineicons.css';
+
 // import 'primeflex/primeflex.css';
 
 
@@ -43,34 +45,60 @@ import '@ionic/react/css/palettes/dark.system.css';
 /* Theme variables */
 import './theme/variables.css';
 import Login from './pages/Login';
-import UtilisateurPage from './pages/utilisateur/UtilisateurPage';
-import ChauffeurPage from './pages/chauffeur/ChauffeurPage';
-import PageVehicules from './pages/chauffeur/PageVehicules';
-import Trajet from './pages/chauffeur/Trajet';
-import TrajetsVehicule from './pages/chauffeur/TrajetsVehicule';
-import AProposChauffeur from './pages/chauffeur/AproposChauffeur';
-import ListeTrajet from './pages/utilisateur/ListeTrajet';
-import PageReservation from './pages/utilisateur/PageReservation';
-import MesVoyages from './pages/utilisateur/MesVoyages';
-import APropos from './pages/utilisateur/APropos';
-import PassagerAbonnement from './pages/utilisateur/PassagerAbonnement';
+// import UtilisateurPage from './pages/utilisateur/UtilisateurPage';
+// import ChauffeurPage from './pages/chauffeur/ChauffeurPage';
+// import PageVehicules from './pages/chauffeur/PageVehicules';
+// import Trajet from './pages/chauffeur/Trajet';
+// import TrajetsVehicule from './pages/chauffeur/TrajetsVehicule';
+// import AProposChauffeur from './pages/chauffeur/AproposChauffeur';
+// import ListeTrajet from './pages/utilisateur/ListeTrajet';
+// import PageReservation from './pages/utilisateur/PageReservation';
+// import MesVoyages from './pages/utilisateur/MesVoyages';
+// import APropos from './pages/utilisateur/APropos';
+// import PassagerAbonnement from './pages/utilisateur/PassagerAbonnement';
+import Navigation from './components/navigation/page';
+import { useState } from 'react';
+import { chauffeurConfig, userTabs } from './components/navigation/nav.config';
+import { NavItem } from './types/nav.type';
 
 setupIonicReact();
 
-const App: React.FC = () => (
-  <IonApp>
+
+
+const App: React.FC = () => {
+
+  const [role, setRole] = useState<string | null>(null);
+
+  const handleLogin = (userRole: string) => {
+    setRole(userRole);
+  };
+
+  let tabsToRender: NavItem[] | null = null;
+  switch (role) {
+    case "chauffeur":
+      tabsToRender = chauffeurConfig;
+      break;
+    case "utilisateur":
+      tabsToRender = userTabs;
+      break;
+    default:
+      tabsToRender = null;
+  }
+
+  return (<IonApp>
     <IonReactRouter>
-      <IonRouterOutlet>
+    
+      {/* <IonRouterOutlet>
         <Route exact path="/login" component={Login} />
 
-        {/* chauffeurs routes */}
+        
         <Route exact path="/chauffeur" component={ChauffeurPage} />
         <Route path="/chauffeur/mes-vehicules" component={PageVehicules} />
         <Route path="/chauffeur/creer-trajet" component={Trajet} />
         <Route path="/chauffeur/trajets-vehicule/:vehiculeId" component={TrajetsVehicule} />
         <Route path="/chauffeur/a-propos" component={AProposChauffeur} />
 
-        {/* utilisateurs routes */}
+        
         <Route exact path="/utilisateur" component={UtilisateurPage} />
         <Route path="/utilisateur/trajets" component={ListeTrajet} />
         <Route path="/utilisateur/reserver-trajet/:trajetId" component={PageReservation} />
@@ -79,9 +107,16 @@ const App: React.FC = () => (
         <Route path="/utilisateur/abonnement" component={PassagerAbonnement} />
 
         <Redirect exact from="/" to="/login" />
-      </IonRouterOutlet>
+      </IonRouterOutlet> */}
+
+      {role === null ? (
+          <Route exact path="/" render={() => <Login onLogin={handleLogin} />} />
+        ) : (
+          <Navigation tabs={tabsToRender!} defaultRoute="/home" />
+        )}
+        <Redirect exact from="*" to="/" />
     </IonReactRouter>
-  </IonApp>
-);
+  </IonApp>);
+};
 
 export default App;

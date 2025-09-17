@@ -18,14 +18,14 @@ interface Role {
   nom: string;
 }
 
-const Login: React.FC = () => {
+const Login: React.FC<{ onLogin: (role: string) => void }> = ({ onLogin }) => {
   const [email, setEmail] = useState('Uzzdlh4343@gmail.com');
   const [password, setPassword] = useState('');
   const [idRole, setIdRole] = useState<number | null>(null);
   const [roles, setRoles] = useState<Role[]>([]);
   const [loadingRoles, setLoadingRoles] = useState(true);
   const [toastMessage, setToastMessage] = useState('');
-  const [rememberMe, setRememberMe] = useState(false);
+  // const [rememberMe, setRememberMe] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
   const history = useHistory();
@@ -80,10 +80,13 @@ const Login: React.FC = () => {
 
         if (response.data.utilisateur.idRole === 1) {
           history.push('/chauffeur');
+          onLogin('chauffeur');
         } else if (response.data.utilisateur.idRole === 2) {
           history.push('/utilisateur');
+          onLogin('utilisateur');
         } else {
           history.push('/administrateur');
+          onLogin('administrateur');
         }
       }
 
@@ -130,19 +133,6 @@ const Login: React.FC = () => {
                 className="auth-input"
               />
             </div>
-
-            {/* <div className="login-options">
-              <label className="checkbox-container">
-                <input 
-                  type="checkbox" 
-                  checked={rememberMe} 
-                  onChange={() => setRememberMe(!rememberMe)} 
-                />
-                <span className="checkmark"></span>
-                Remember Me
-              </label>
-              <span className="forgot-password">Forgot Password?</span>
-            </div> */}
 
             <div className="d-flex flex-column mb-3">
               <span className='text-dark mb-1' style={{ fontSize: '14px', fontWeight: '600' }}>Select Your Role</span>

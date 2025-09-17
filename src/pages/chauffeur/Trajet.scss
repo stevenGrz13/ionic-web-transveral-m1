@@ -1,0 +1,215 @@
+.trajet-content {
+  --background: #f5f6fa;
+}
+
+.form-container {
+  padding: 16px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.form-card {
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  margin: 0;
+}
+
+.input-section {
+  margin-bottom: 24px;
+  
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.section-label {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.section-icon {
+  margin-right: 8px;
+  font-size: 18px;
+}
+
+.custom-item {
+  --background: #f8f9fa;
+  --border-radius: 12px;
+  --padding-start: 16px;
+  --padding-end: 16px;
+  --inner-padding-bottom: 8px;
+  --inner-padding-top: 8px;
+  margin-bottom: 8px;
+  
+  &.item-has-focus {
+    --background: #e8f4fd;
+  }
+}
+
+.custom-select {
+  width: 100%;
+}
+
+.vehicle-details {
+  padding: 0 16px;
+  margin-top: -8px;
+}
+
+.vehicle-info {
+  font-size: 12px;
+}
+
+.route-grid {
+  --ion-grid-padding: 0;
+  
+  ion-row {
+    margin-bottom: 8px;
+    
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+}
+
+.route-item {
+  position: relative;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    left: 12px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: linear-gradient(to bottom, var(--ion-color-primary), var(--ion-color-secondary));
+    z-index: 1;
+  }
+  
+  &:first-child::before {
+    top: 50%;
+  }
+  
+  &:last-child::before {
+    bottom: 50%;
+  }
+  
+  ion-label {
+    font-weight: 600;
+    color: var(--ion-color-dark);
+  }
+}
+
+.custom-input {
+  // --padding-start: 32px !important;
+  
+  input {
+    padding-left: 0 !important;
+  }
+}
+
+.price-input {
+  input {
+    text-align: right;
+  }
+}
+
+// Styles pour le sélecteur de date/heure
+.datetime-item {
+  ion-datetime-button {
+    --ion-color-base: var(--ion-color-primary) !important;
+    
+    .datetime-button {
+      height: 40px;
+      min-width: 150px;
+    }
+  }
+}
+
+.custom-datetime {
+  --background: white;
+  padding: 16px;
+  
+  &::part(time-button) {
+    color: var(--ion-color-primary);
+  }
+}
+
+.datetime-actions {
+  padding: 16px;
+  display: flex;
+  justify-content: flex-end;
+  border-top: 1px solid var(--ion-color-light-shade);
+}
+
+.create-button {
+  --border-radius: 12px;
+  --padding-top: 18px;
+  --padding-bottom: 18px;
+  margin: 24px 0 16px;
+  font-weight: 600;
+  text-transform: none;
+  font-size: 16px;
+  
+  &:disabled {
+    --background: var(--ion-color-medium);
+    --background-hover: var(--ion-color-medium);
+    --background-activated: var(--ion-color-medium);
+  }
+}
+
+.required-info {
+  display: block;
+  text-align: center;
+  font-size: 12px;
+  margin-top: 8px;
+}
+
+// Styles pour les états de focus
+ion-item.item-has-focus {
+  --background: #e8f4fd;
+  
+  ion-label {
+    color: var(--ion-color-primary) !important;
+  }
+}
+
+// Animation de succès
+@keyframes successPulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+.create-button {
+  transition: all 0.3s ease;
+  
+  &.button-disabled {
+    opacity: 0.7;
+  }
+}
+
+// Responsive
+@media (max-width: 480px) {
+  .form-container {
+    padding: 12px;
+  }
+  
+  .input-section {
+    margin-bottom: 20px;
+  }
+  
+  .section-label {
+    font-size: 13px;
+  }
+  
+  .create-button {
+    --padding-top: 16px;
+    --padding-bottom: 16px;
+    margin: 20px 0 12px;
+  }
+}

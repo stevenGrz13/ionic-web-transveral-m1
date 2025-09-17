@@ -1,0 +1,62 @@
+// .custom-tabs{
+//   background: var(--ion-background-color);
+// }
+
+.custom-tab-bar {
+  border-radius: 30px;
+  margin: 0 10px 10px 10px;
+  padding: 5px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  background: #000000;
+  position: relative;
+}
+
+.custom-button{
+  --background: transparent;
+  --box-shadow: none;
+  // --color: #5b3dfd;
+  --padding-start: 0;
+  --padding-end: 0;
+  --min-width: 0;
+  --min-height: 0;
+  --border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  // color: white;
+}
+
+.center-button {
+  // position: absolute;
+  // top: -25px;
+  // left: 50%;
+  // transform: translateX(-50%);
+  // z-index: 999999;
+  
+  .button-inner{
+    background: violet;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+  }
+}
+
+.custom-icon {
+  font-size: 24px;
+  // color: #5b3dfd;
+}
+
+.fab-btn {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  border: none;
+  background-color: #5b3dfd;
+  color: #fff;
+  font-size: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}

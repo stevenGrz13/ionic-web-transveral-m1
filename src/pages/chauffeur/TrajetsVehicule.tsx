@@ -20,7 +20,7 @@ import {
   IonButtons,
   IonIcon
 } from '@ionic/react';
-import { car, calendar, location, cash } from 'ionicons/icons';
+import { car, calendar, location } from 'ionicons/icons';
 import axios from 'axios';
 import { useHistory, useParams } from 'react-router-dom';
 import { API_BASE_URL } from '../../../config';

@@ -5,4 +5,61 @@ http://ionicframework.com/docs/theming/ */
 
 :root {
   --ion-font-family: 'Nunito', sans-serif;
+  --ion-color-primary: #fbb900;
+  --ion-color-primary-rgb: 251, 185, 0;
+  --ion-color-primary-contrast: #ffffff;
+  --ion-color-primary-contrast-rgb: 255, 255, 255;
+  --ion-color-primary-shade: #e6a800;
+  --ion-color-primary-tint: #fccd33;
+  --ion-background-color: #f5f5f5;
+  /* --ion-tab-bar-background: var(--ion-background-color); */
+}
+
+body {
+  /* background: #f0f2f5; */
+}
+
+.custom-header {
+  box-shadow: none;
+  .toolbar-header {
+    /* --background: var(--ion-color-primary); */
+    /* --color: white; */
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    .toolbar-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--ion-color-primary);
+      margin-left: 16px;
+    }
+  }
+
+
+}
+
+.back-button {
+  --background: transparent;
+  /* --color: var(--ion-color-primary); */
+  font-size: 1.5rem;
+  margin-left: 8px;
+
+}
+
+.custom-tabs{
+  background: var(--ion-background-color);
+}
+
+.custom-action-button {
+  --background: black;
+  --color: var(--ion-color-primary);
+  /* font-weight: 600; */
+  --border-radius: 30px;
+  --box-shadow: none;
+  --padding-top: 15px;
+  --padding-bottom: 15px;
+
+  text-transform: capitalize;
 }
